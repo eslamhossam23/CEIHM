@@ -1,6 +1,5 @@
 package com.app.eslamhossam23.testceihm;
 
-<<<<<<< HEAD
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -16,19 +15,12 @@ import android.widget.Toast;
 import java.util.ArrayList;
 import java.util.List;
 
-=======
-import android.os.Bundle;
-import android.support.annotation.Nullable;
-import android.support.v7.app.AppCompatActivity;
-import android.widget.Toast;
 
->>>>>>> a91ba8039f199156ffbf28d95f156774942a923f
 /**
  * Created by Eslam on 0016 16/12/2016.
  */
 
 public class GameActivity extends AppCompatActivity {
-<<<<<<< HEAD
     List<Theme> themes = new ArrayList<>();
 
     @Override
@@ -37,16 +29,11 @@ public class GameActivity extends AppCompatActivity {
         themes.add(new Theme(R.drawable.mariage, "Mariage"));
         themes.add(new Theme(R.drawable.famille, "Famille"));
         themes.add(new Theme(R.drawable.enfants, "Enfants"));
-=======
 
-    @Override
-    protected void onCreate(@Nullable Bundle savedInstanceState) {
->>>>>>> a91ba8039f199156ffbf28d95f156774942a923f
         super.onCreate(savedInstanceState);
         setContentView(R.layout.game_layout);
         String prenom = getIntent().getExtras().getString("prenom");
         Toast.makeText(this, prenom, Toast.LENGTH_SHORT).show();
-<<<<<<< HEAD
         GridView gridView = (GridView) findViewById(R.id.listCategories);
         ArrayAdapter arrayAdapter = new ListAdapter();
         gridView.setAdapter(arrayAdapter);
@@ -78,7 +65,5 @@ public class GameActivity extends AppCompatActivity {
             return itemView;
 //            return super.getView(position, convertView, parent);
         }
-=======
->>>>>>> a91ba8039f199156ffbf28d95f156774942a923f
     }
 }
