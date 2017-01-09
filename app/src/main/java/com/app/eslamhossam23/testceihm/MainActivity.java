@@ -23,13 +23,9 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        for (int i = 0; i < 15; i ++) {
-            if(i % 2 == 0){
-                profilList.add(new Profil("Hossam", "Eslam", R.drawable.avatar_male));
-            }else {
-                profilList.add(new Profil("Chebaane", "Meriem", R.drawable.avatar_female));
-            }
-        }
+        profilList.add(new Profil("Dubois","Vanessa", R.drawable.old_1));
+        profilList.add(new Profil("Durand", "Roger", R.drawable.old_2));
+        profilList.add(new Profil("Matthew", "Pierre", R.drawable.old_3));
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
@@ -60,13 +56,12 @@ public class MainActivity extends AppCompatActivity {
 //            TextView textView1 = (TextView) itemView.findViewById(R.id.prenom);
 //            textView1.setText(profil.getPrenom());
             itemView.setOnClickListener(new View.OnClickListener() {
-                String prenom = profil.getPrenom();
-                String nom = profil.getNom();
+                int idImage = profil.getIdImage();
                 @Override
                 public void onClick(View v) {
 //                    Toast.makeText(getContext(), "Hello " + prenom, Toast.LENGTH_SHORT).show();
                     Intent intent = new Intent(MainActivity.this, GameActivity.class);
-                    intent.putExtra("prenom", prenom);
+                    intent.putExtra("image", idImage);
                     startActivity(intent);
                 }
             });
