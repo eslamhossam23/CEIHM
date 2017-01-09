@@ -27,6 +27,7 @@ import java.util.TimerTask;
 public class GameActivity extends AppCompatActivity {
     //Periode entre deux affichages successifs de hints
     public static final int PERIOD = 10000;
+    public static final int INACTIVITY_DELAY = 10000;
     List<Theme> themes = new ArrayList<>();
     public static Timer timer;
     public static int imageID;
@@ -59,7 +60,7 @@ public class GameActivity extends AppCompatActivity {
                 });
 
             }
-        }, 2000, PERIOD);
+        }, 0, PERIOD);
 
     }
 

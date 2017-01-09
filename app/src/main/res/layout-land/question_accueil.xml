@@ -27,7 +27,7 @@
         android:layout_toEndOf="@+id/avatar_question" />
 
     <TextView
-        android:text="Nous sommes dans quel saison?"
+        android:text=""
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/question_text"
