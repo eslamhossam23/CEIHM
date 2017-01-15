@@ -31,7 +31,7 @@ public class AccueilActivity extends AppCompatActivity {
     public static final String FILM = "Quelle est votre film préféré?";
     public static final String MUSIC = "Quelle est votre musique préférée?";
     public static final String HINT_TEXT = "Appuyez sur une image pour selectionner la bonne réponse.";
-    public static final int INACTIVITY_DELAY = 10000;
+    public static final int INACTIVITY_DELAY = 20000;
     List<Theme> themes = new ArrayList<>();
     public static Timer timer;
     public static List<String> questions = new ArrayList<>();
@@ -45,7 +45,19 @@ public class AccueilActivity extends AppCompatActivity {
         initQuestions();
         initReponses();
         initQuestion();
-        startTimer();
+        timer = new Timer();
+        timer.schedule(new TimerTask() {
+            @Override
+            public void run() {
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+//                        final ImageView cursor = (ImageView) findViewById(R.id.cursor);
+                        showHint(HINT_TEXT);
+                    }
+                });
+            }
+        }, 500, PERIOD);
     }
 
     @Override

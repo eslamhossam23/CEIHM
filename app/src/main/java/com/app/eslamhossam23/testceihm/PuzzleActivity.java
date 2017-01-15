@@ -60,7 +60,7 @@ public class PuzzleActivity extends AppCompatActivity {
             }
         });
         TextView textView = (TextView) findViewById(R.id.question_text);
-        textView.setText("Choisissez l'image qui manque.");
+        textView.setText("Choisissez la partie qui manque.");
         timer = new Timer();
         timer.schedule(new TimerTask() {
             @Override
@@ -73,7 +73,7 @@ public class PuzzleActivity extends AppCompatActivity {
                     }
                 });
             }
-        }, 0, PERIOD);
+        }, 500, PERIOD);
     }
 
     private void startTimer() {
@@ -172,11 +172,10 @@ public class PuzzleActivity extends AppCompatActivity {
 
     private void showVictory() {
         final View victoryView = findViewById(R.id.victory);
+        final ImageView imageView = (ImageView) findViewById(R.id.image);
+        Bitmap bitmapSource = BitmapFactory.decodeResource(getResources(), questions.get(currentQuestion));
+        imageView.setImageBitmap(bitmapSource);
         victoryView.setAlpha(0);
-        victoryView.setVisibility(View.VISIBLE);
-        findViewById(R.id.guide).setVisibility(View.GONE);
-        findViewById(R.id.question).setVisibility(View.GONE);
-        findViewById(R.id.suggestions).setVisibility(View.GONE);
         ValueAnimator valueAnimator = ValueAnimator.ofFloat(victoryView.getAlpha(), victoryView.getAlpha() + 1f);
         valueAnimator.setDuration(2000);
         valueAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
@@ -188,7 +187,23 @@ public class PuzzleActivity extends AppCompatActivity {
                 }
             }
         });
-        valueAnimator.start();
+        ValueAnimator valueAnimator2 = ValueAnimator.ofFloat(0f, 1f);
+        valueAnimator2.setDuration(2000);
+        valueAnimator2.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+            @Override
+            public void onAnimationUpdate(ValueAnimator animation) {
+                imageView.setAlpha((Float) animation.getAnimatedValue());
+                if((Float) animation.getAnimatedValue() == 1f){
+                    victoryView.setVisibility(View.VISIBLE);
+                    findViewById(R.id.guide).setVisibility(View.GONE);
+                    findViewById(R.id.question).setVisibility(View.GONE);
+                    findViewById(R.id.suggestions).setVisibility(View.GONE);
+                }
+            }
+        });
+        AnimatorSet animatorSet = new AnimatorSet();
+        animatorSet.play(valueAnimator).after(valueAnimator2);
+        animatorSet.start();
     }
 
     public void hideVictory() {

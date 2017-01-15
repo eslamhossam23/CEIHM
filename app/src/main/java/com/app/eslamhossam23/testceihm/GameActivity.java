@@ -62,7 +62,7 @@ public class GameActivity extends AppCompatActivity {
                 });
 
             }
-        }, 0, PERIOD);
+        }, 500, PERIOD);
 
     }
 
