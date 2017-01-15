@@ -3,10 +3,13 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent">
-
+    <Space android:layout_height="10dp"
+        android:layout_width="match_parent"/>
     <ImageView
-        android:layout_width="80dp"
-        android:layout_height="80dp"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
         android:adjustViewBounds="true"
         android:id="@+id/suggestion"/>
+    <Space android:layout_height="10dp"
+        android:layout_width="match_parent"/>
 </LinearLayout>

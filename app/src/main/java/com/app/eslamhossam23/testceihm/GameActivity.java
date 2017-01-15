@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
@@ -26,8 +27,9 @@ import java.util.TimerTask;
 
 public class GameActivity extends AppCompatActivity {
     //Periode entre deux affichages successifs de hints
-    public static final int PERIOD = 10000;
-    public static final int INACTIVITY_DELAY = 10000;
+    public static final int PERIOD = 20000;
+    public static final int INACTIVITY_DELAY = 20000;
+    public static final String HINT_TEXT = "Appuyez sur un thème pour le sélectionner.";
     List<Theme> themes = new ArrayList<>();
     public static Timer timer;
     public static int imageID;
@@ -55,12 +57,12 @@ public class GameActivity extends AppCompatActivity {
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        showHint("Appuyez sur un thème pour le sélectionner.");
+                        showHint(HINT_TEXT);
                     }
                 });
 
             }
-        }, 0, PERIOD);
+        }, 500, PERIOD);
 
     }
 
@@ -153,7 +155,7 @@ public class GameActivity extends AppCompatActivity {
                     if((int) v.findViewById(R.id.imageView2).getTag() == imageID){
                         Intent intent = new Intent(GameActivity.this, AccueilActivity.class);
                         startActivity(intent);
-                    }else if((int) v.findViewById(R.id.imageView2).getTag() == R.drawable.mariage) {
+                    }else if((int) v.findViewById(R.id.imageView2).getTag() == R.drawable.family) {
                         Intent intent = new Intent(GameActivity.this, PuzzleActivity.class);
                         startActivity(intent);
                     }else if((int) v.findViewById(R.id.imageView2).getTag() == R.drawable.children_1) {
