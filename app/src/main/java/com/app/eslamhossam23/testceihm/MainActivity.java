@@ -27,8 +27,8 @@ public class MainActivity extends AppCompatActivity {
     Context context;
     public static Timer timer;
     public static final String HINT_TEXT = "Appuyez pour selectionner votre image.";
-    public static final int PERIOD = 10000;
-    public static final int INACTIVITY_DELAY = 1000;
+    public static final int PERIOD = 20000;
+    public static final int INACTIVITY_DELAY = 500;
 
 
     @Override

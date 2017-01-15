@@ -1,68 +1,173 @@
 package com.app.eslamhossam23.testceihm;
 
-import android.content.Context;
+import android.animation.AnimatorSet;
+import android.animation.ValueAnimator;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.os.Build;
+import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.GridView;
 import android.widget.ImageView;
-import android.widget.ListView;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 public class PuzzleActivity extends AppCompatActivity {
     public List<Bitmap> suggestions = new ArrayList<>();
-
+    public List<Integer> questions = new ArrayList<>();
+    public static int currentQuestion = 0;
+    public static int missingPiece;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_puzzle);
+        initQuestions();
         initSuggestions();
-        initImage();
         CustomAdapter customAdapter = new CustomAdapter();
         GridView gridView = (GridView) findViewById(R.id.suggestions);
         gridView.setAdapter(customAdapter);
+        gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                if(position == missingPiece){
+                    showVictory();
+                }else{
+                    help();
+                }
+            }
+        });
     }
 
-    private void initImage() {
-        ImageView imageView = (ImageView) findViewById(R.id.image);
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            Bitmap bitmapSource = BitmapFactory.decodeResource(getResources(), R.drawable.autumn_small);
-//            imageView.setImageBitmap(Bitmap.createBitmap(bitmapSource, 0, 0 , bitmapSource.getWidth()/2, bitmapSource.getHeight()));
-            Bitmap bitmap = null;
-            bitmap = Bitmap.createBitmap(bitmapSource.getWidth(), bitmapSource.getHeight(), Bitmap.Config.ARGB_8888);
-            Canvas canvas = new Canvas(bitmap);
-            canvas.drawBitmap(Bitmap.createBitmap(bitmapSource, 0, 0 , bitmapSource.getWidth()/2, bitmapSource.getHeight()), 0f, 0f, null);
-            canvas.drawBitmap(Bitmap.createBitmap(bitmapSource, bitmapSource.getWidth()/2, 0 , bitmapSource.getWidth()/2, bitmapSource.getHeight()/2), bitmapSource.getWidth()/2, 0f, null);
-            imageView.setImageBitmap(bitmap);
-        }
+    private void initQuestions() {
+        questions.add(R.drawable.autumn_small);
+        questions.add(R.drawable.winter);
     }
+
+    private void showVictory() {
+        final View victoryView = findViewById(R.id.victory);
+        victoryView.setAlpha(0);
+        victoryView.setVisibility(View.VISIBLE);
+        findViewById(R.id.guide).setVisibility(View.GONE);
+        findViewById(R.id.question).setVisibility(View.GONE);
+        findViewById(R.id.suggestions).setVisibility(View.GONE);
+        ValueAnimator valueAnimator = ValueAnimator.ofFloat(victoryView.getAlpha(), victoryView.getAlpha() + 1f);
+        valueAnimator.setDuration(2000);
+        valueAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+            @Override
+            public void onAnimationUpdate(ValueAnimator animation) {
+                victoryView.setAlpha((Float) animation.getAnimatedValue());
+                if((Float) animation.getAnimatedValue() == 1f){
+                    hideVictory();
+                }
+            }
+        });
+        valueAnimator.start();
+    }
+
+    public void hideVictory() {
+        final View victoryView = findViewById(R.id.victory);
+        ValueAnimator valueAnimator = ValueAnimator.ofFloat(victoryView.getAlpha(), 0f);
+        valueAnimator.setDuration(2000);
+        valueAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+            @Override
+            public void onAnimationUpdate(ValueAnimator animation) {
+                victoryView.setAlpha((Float) animation.getAnimatedValue());
+                if((Float)animation.getAnimatedValue() == 0){
+//                    findViewById(R.id.question).setVisibility(View.VISIBLE);
+                    victoryView.setVisibility(View.GONE);
+                }
+            }
+        });
+        valueAnimator.start();
+        nextQuestion();
+    }
+
+    private void nextQuestion() {
+        currentQuestion++;
+        if(currentQuestion == questions.size()){
+            return;
+        }
+        createPuzzle(2);
+        findViewById(R.id.question).setVisibility(View.VISIBLE);
+        findViewById(R.id.suggestions).setVisibility(View.VISIBLE);
+    }
+
+    private void help() {
+        Random random = new Random();
+        int removedItem = random.nextInt(suggestions.size());
+        while (removedItem == missingPiece){
+            removedItem = random.nextInt(suggestions.size());
+        }
+        suggestions.remove(removedItem);
+        GridView gridView = (GridView) findViewById(R.id.suggestions);
+        ArrayAdapter arrayAdapter = new CustomAdapter();
+        gridView.setAdapter(arrayAdapter);
+        showSecondChance();
+    }
+
+    private void showSecondChance() {
+        final View tryAgain = findViewById(R.id.secondChance);
+        tryAgain.setAlpha(0);
+        tryAgain.setVisibility(View.VISIBLE);
+        ValueAnimator valueAnimator = ValueAnimator.ofFloat(0f, 1f);
+        valueAnimator.setDuration(1500);
+        valueAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+            @Override
+            public void onAnimationUpdate(ValueAnimator animation) {
+                tryAgain.setAlpha((Float) animation.getAnimatedValue());
+            }
+        });
+        ValueAnimator valueAnimator2 = ValueAnimator.ofFloat(1f, 0f);
+        valueAnimator2.setDuration(1500);
+        valueAnimator2.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+            @Override
+            public void onAnimationUpdate(ValueAnimator animation) {
+                tryAgain.setAlpha((Float) animation.getAnimatedValue());
+                if((float)animation.getAnimatedValue() == 0f){
+                    tryAgain.setVisibility(View.GONE);
+                }
+            }
+        });
+        AnimatorSet animatorSet = new AnimatorSet();
+        animatorSet.play(valueAnimator).before(valueAnimator2);
+        animatorSet.start();
+    }
+
+
 
     private void initSuggestions() {
-//        Bitmap bitmapSource = BitmapFactory.decodeResource(getResources(), R.drawable.autumn_small);
-//        suggestions.add(Bitmap.createBitmap(bitmapSource, 0, 0 , bitmapSource.getWidth()/2, bitmapSource.getHeight()/2));
-//        suggestions.add(Bitmap.createBitmap(bitmapSource, bitmapSource.getWidth()/2, 0 , bitmapSource.getWidth()/2, bitmapSource.getHeight()/2));
-//        suggestions.add(Bitmap.createBitmap(bitmapSource, 0, bitmapSource.getHeight()/2 , bitmapSource.getWidth()/2, bitmapSource.getHeight()/2));
-//        suggestions.add(Bitmap.createBitmap(bitmapSource, bitmapSource.getWidth()/2, bitmapSource.getHeight()/2 , bitmapSource.getWidth()/2, bitmapSource.getHeight()/2));
-        createPuzzle(3);
+        createPuzzle(2);
     }
 
     private void createPuzzle(int division) {
-        Bitmap bitmapSource = BitmapFactory.decodeResource(getResources(), R.drawable.autumn_small);
+        suggestions.clear();
+        ImageView imageView = (ImageView) findViewById(R.id.image);
+        Bitmap bitmapSource = BitmapFactory.decodeResource(getResources(), questions.get(currentQuestion));
+        Bitmap bitmap = Bitmap.createBitmap(bitmapSource.getWidth(), bitmapSource.getHeight(), Bitmap.Config.ARGB_8888);
+        Canvas canvas = new Canvas(bitmap);
+        Random random = new Random();
+        missingPiece = random.nextInt((int) Math.pow(division, 2));
+        int count = 0;
         for(int i = 0; i < division; i++){
             for (int j = 0; j < division; j++){
-                suggestions.add(Bitmap.createBitmap(bitmapSource, (j * bitmapSource.getWidth())/division, (i * bitmapSource.getHeight())/division, bitmapSource.getWidth()/division, bitmapSource.getHeight()/division));
+                Bitmap piece = Bitmap.createBitmap(bitmapSource, (j * bitmapSource.getWidth())/division, (i * bitmapSource.getHeight())/division, bitmapSource.getWidth()/division, bitmapSource.getHeight()/division);
+                suggestions.add(piece);
+                if(missingPiece != count){
+                    canvas.drawBitmap(piece, (j * bitmapSource.getWidth())/division, (i * bitmapSource.getHeight())/division, null);
+                }
+                count++;
             }
         }
+        imageView.setImageBitmap(bitmap);
     }
 
     public class CustomAdapter extends ArrayAdapter {

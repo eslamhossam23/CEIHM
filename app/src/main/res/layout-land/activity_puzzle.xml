@@ -20,7 +20,7 @@
        <LinearLayout android:layout_height="match_parent"
            android:layout_width="0dp"
            android:layout_weight="5">
-           <include layout="@layout/question_generic"></include>
+           <include layout="@layout/question_generic" android:id="@+id/question"/>
        </LinearLayout>
         <ImageView
             android:layout_width="0dp"
@@ -42,11 +42,18 @@
         android:visibility="gone"
         android:layout_height="match_parent"
         android:layout_width="match_parent"
-        android:id="@+id/hint"/>
+        android:id="@+id/guide"/>
 
     <include layout="@layout/try_again"
         android:visibility="gone"
         android:layout_height="match_parent"
         android:layout_width="match_parent"
         android:id="@+id/secondChance"/>
+
+    <include layout="@layout/victory"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone"
+        android:id="@+id/victory"/>
+
 </LinearLayout>

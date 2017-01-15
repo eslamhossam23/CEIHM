@@ -22,7 +22,7 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 public class AccueilActivity extends AppCompatActivity {
-    public static final int PERIOD = 10000;
+    public static final int PERIOD = 20000;
     public static final String PREFERENCE = "Preference";
     public static final String SEASON = "Nous sommes dans quel saison?";
     public static final String MONTH = "Nous sommes dans quel mois?";
