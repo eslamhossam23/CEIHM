@@ -11,6 +11,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.ListView;
 
@@ -28,8 +29,8 @@ public class PuzzleActivity extends AppCompatActivity {
         initSuggestions();
         initImage();
         CustomAdapter customAdapter = new CustomAdapter();
-        ListView listView = (ListView) findViewById(R.id.suggestions);
-        listView.setAdapter(customAdapter);
+        GridView gridView = (GridView) findViewById(R.id.suggestions);
+        gridView.setAdapter(customAdapter);
     }
 
     private void initImage() {
@@ -47,11 +48,21 @@ public class PuzzleActivity extends AppCompatActivity {
     }
 
     private void initSuggestions() {
+//        Bitmap bitmapSource = BitmapFactory.decodeResource(getResources(), R.drawable.autumn_small);
+//        suggestions.add(Bitmap.createBitmap(bitmapSource, 0, 0 , bitmapSource.getWidth()/2, bitmapSource.getHeight()/2));
+//        suggestions.add(Bitmap.createBitmap(bitmapSource, bitmapSource.getWidth()/2, 0 , bitmapSource.getWidth()/2, bitmapSource.getHeight()/2));
+//        suggestions.add(Bitmap.createBitmap(bitmapSource, 0, bitmapSource.getHeight()/2 , bitmapSource.getWidth()/2, bitmapSource.getHeight()/2));
+//        suggestions.add(Bitmap.createBitmap(bitmapSource, bitmapSource.getWidth()/2, bitmapSource.getHeight()/2 , bitmapSource.getWidth()/2, bitmapSource.getHeight()/2));
+        createPuzzle(3);
+    }
+
+    private void createPuzzle(int division) {
         Bitmap bitmapSource = BitmapFactory.decodeResource(getResources(), R.drawable.autumn_small);
-        suggestions.add(Bitmap.createBitmap(bitmapSource, 0, 0 , bitmapSource.getWidth()/2, bitmapSource.getHeight()/2));
-        suggestions.add(Bitmap.createBitmap(bitmapSource, bitmapSource.getWidth()/2, 0 , bitmapSource.getWidth()/2, bitmapSource.getHeight()/2));
-        suggestions.add(Bitmap.createBitmap(bitmapSource, 0, bitmapSource.getHeight()/2 , bitmapSource.getWidth()/2, bitmapSource.getHeight()/2));
-        suggestions.add(Bitmap.createBitmap(bitmapSource, bitmapSource.getWidth()/2, bitmapSource.getHeight()/2 , bitmapSource.getWidth()/2, bitmapSource.getHeight()/2));
+        for(int i = 0; i < division; i++){
+            for (int j = 0; j < division; j++){
+                suggestions.add(Bitmap.createBitmap(bitmapSource, (j * bitmapSource.getWidth())/division, (i * bitmapSource.getHeight())/division, bitmapSource.getWidth()/division, bitmapSource.getHeight()/division));
+            }
+        }
     }
 
     public class CustomAdapter extends ArrayAdapter {

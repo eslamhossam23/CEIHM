@@ -29,12 +29,14 @@
             android:adjustViewBounds="true"
             android:layout_weight="5"/>
     </LinearLayout>
-    <ListView
+    <GridView
         android:layout_height="0dp"
         android:layout_width="match_parent"
         android:layout_weight="5"
+        android:numColumns="auto_fit"
+        android:stretchMode="columnWidth"
         android:id="@+id/suggestions">
-    </ListView>
+    </GridView>
 
     <include layout="@layout/guide"
         android:visibility="gone"
