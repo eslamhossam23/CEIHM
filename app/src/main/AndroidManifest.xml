@@ -23,8 +23,11 @@
         <activity
             android:name=".AccueilActivity"
             android:screenOrientation="landscape" />
-        <activity android:name=".PuzzleActivity"
-            android:screenOrientation="landscape"/>
+        <activity
+            android:name=".PuzzleActivity"
+            android:screenOrientation="landscape" />
+        <activity android:name=".Nb_enfant"
+            android:screenOrientation="landscape"></activity>
     </application>
 
 </manifest>
