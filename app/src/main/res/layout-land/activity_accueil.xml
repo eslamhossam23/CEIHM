@@ -28,6 +28,12 @@
         android:visibility="invisible"
         android:id="@+id/guide"/>
 
+    <include layout="@layout/try_again"
+        android:layout_height="match_parent"
+        android:layout_width="match_parent"
+        android:visibility="gone"
+        android:id="@+id/secondChance"/>
+
 
 
 </RelativeLayout>

@@ -6,6 +6,8 @@ import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
@@ -43,8 +45,17 @@ public class AccueilActivity extends AppCompatActivity {
         initQuestions();
         initReponses();
         initQuestion();
+        startTimer();
+    }
 
+    @Override
+    public boolean onTouchEvent(MotionEvent event) {
+        pauseTimer();
+        startTimer();
+        return super.onTouchEvent(event);
+    }
 
+    private void startTimer() {
         timer = new Timer();
         timer.schedule(new TimerTask() {
             @Override
@@ -58,6 +69,10 @@ public class AccueilActivity extends AppCompatActivity {
                 });
             }
         }, INACTIVITY_DELAY, PERIOD);
+    }
+
+    private void pauseTimer() {
+        timer.cancel();
     }
 
     public void initQuestions() {
@@ -264,6 +279,35 @@ public class AccueilActivity extends AppCompatActivity {
         GridView gridView = (GridView) findViewById(R.id.grid);
         ArrayAdapter arrayAdapter = new AccueilActivity.StringListAdapter(reponses);
         gridView.setAdapter(arrayAdapter);
+        showSecondChance();
+    }
+
+    private void showSecondChance() {
+        final View tryAgain = findViewById(R.id.secondChance);
+        tryAgain.setAlpha(0);
+        tryAgain.setVisibility(View.VISIBLE);
+        ValueAnimator valueAnimator = ValueAnimator.ofFloat(0f, 1f);
+        valueAnimator.setDuration(1500);
+        valueAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+            @Override
+            public void onAnimationUpdate(ValueAnimator animation) {
+                tryAgain.setAlpha((Float) animation.getAnimatedValue());
+            }
+        });
+        ValueAnimator valueAnimator2 = ValueAnimator.ofFloat(1f, 0f);
+        valueAnimator2.setDuration(1500);
+        valueAnimator2.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+            @Override
+            public void onAnimationUpdate(ValueAnimator animation) {
+                tryAgain.setAlpha((Float) animation.getAnimatedValue());
+                if((float)animation.getAnimatedValue() == 0f){
+                    tryAgain.setVisibility(View.GONE);
+                }
+            }
+        });
+        AnimatorSet animatorSet = new AnimatorSet();
+        animatorSet.play(valueAnimator).before(valueAnimator2);
+        animatorSet.start();
     }
 
     private class ListAdapter extends ArrayAdapter {
@@ -301,6 +345,8 @@ public class AccueilActivity extends AppCompatActivity {
                     if (!reponses.get(question).equals(PREFERENCE)) {
                         if (v.findViewById(R.id.imageView2).getTag().equals(reponses.get(question))) {
                             showVictory();
+                        }else {
+                            showSecondChance();
                         }
                     }
                 }
