@@ -155,7 +155,7 @@ public class GameActivity extends AppCompatActivity {
                     if((int) v.findViewById(R.id.imageView2).getTag() == imageID){
                         Intent intent = new Intent(GameActivity.this, AccueilActivity.class);
                         startActivity(intent);
-                    }else if((int) v.findViewById(R.id.imageView2).getTag() == R.drawable.mariage) {
+                    }else if((int) v.findViewById(R.id.imageView2).getTag() == R.drawable.family) {
                         Intent intent = new Intent(GameActivity.this, PuzzleActivity.class);
                         startActivity(intent);
                     }
