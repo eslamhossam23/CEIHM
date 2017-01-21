@@ -9,7 +9,7 @@ import android.widget.TextView;
 
 public class Nb_enfant extends AppCompatActivity {
     public String[] n = new String[3];
-    public String question = "Quelle est le nombre de vos enfants ?";
+    public String question = "Quel est le nombre de vos enfants ?";
     public int i = 0;
     @Override
     protected void onCreate(Bundle savedInstanceState) {

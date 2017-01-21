@@ -37,7 +37,7 @@ public class GameActivity extends AppCompatActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         imageID = getIntent().getIntExtra("image", R.drawable.accueil);
-        themes.add(new Theme(imageID, "Accueil"));
+        themes.add(new Theme(imageID, "Moi"));
         themes.add(new Theme(R.drawable.mariage, "Mariage"));
         themes.add(new Theme(R.drawable.family, "Famille"));
         themes.add(new Theme(R.drawable.children_1, "Enfants"));
@@ -136,6 +136,8 @@ public class GameActivity extends AppCompatActivity {
             }
             final Theme theme = themes.get(position);
             ImageView imageView = (ImageView) itemView.findViewById(R.id.imageView2);
+            TextView textView = (TextView) itemView.findViewById(R.id.textView2);
+            textView.setText(theme.getName());
             imageView.setImageResource(theme.getIdImage());
             imageView.setTag(theme.getIdImage());
             itemView.setOnClickListener(new View.OnClickListener() {

@@ -13,13 +13,24 @@
         app:srcCompat="@mipmap/ic_launcher"
         android:layout_marginTop="12dp"
         android:id="@+id/imageView2"
-        android:maxHeight="150dp"
-        android:maxWidth="150dp"
+        android:maxHeight="300dp"
+        android:maxWidth="300dp"
         android:adjustViewBounds="true"
         android:layout_marginStart="60dp"
         android:layout_alignParentTop="true"
         android:layout_alignParentStart="true" />
 
+    <TextView
+        android:text=""
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/imageView2"
+        android:layout_alignStart="@+id/imageView2"
+        android:layout_marginTop="15dp"
+        android:id="@+id/textView2"
+        android:textSize="24sp" />
+
     <Space android:layout_height="10dp"
-        android:layout_width="match_parent"/>
+        android:layout_width="match_parent" android:layout_below="@+id/textView2"/>
+
 </RelativeLayout>

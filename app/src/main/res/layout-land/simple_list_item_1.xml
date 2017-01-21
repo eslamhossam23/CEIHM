@@ -11,8 +11,8 @@
         app:srcCompat="@mipmap/ic_launcher"
         android:layout_marginTop="10dp"
         android:id="@+id/imageView"
-        android:maxHeight="150dp"
-        android:maxWidth="150dp"
+        android:maxHeight="400dp"
+        android:maxWidth="400dp"
         android:adjustViewBounds="true"
         android:layout_alignParentTop="true"
         android:layout_alignParentStart="true" />

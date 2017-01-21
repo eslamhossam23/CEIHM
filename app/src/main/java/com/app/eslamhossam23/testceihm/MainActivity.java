@@ -33,15 +33,15 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        profilList.add(new Profil("Dubois","Vanessa", R.drawable.old_1));
+//        profilList.add(new Profil("Dubois","Vanessa", R.drawable.old_1));
         profilList.add(new Profil("Durand", "Roger", R.drawable.old_2));
-        profilList.add(new Profil("Matthew", "Pierre", R.drawable.old_4));
-        profilList.add(new Profil("Matthew", "Pierre", R.drawable.old_5));
+//        profilList.add(new Profil("Matthew", "Pierre", R.drawable.old_4));
+//        profilList.add(new Profil("Matthew", "Pierre", R.drawable.old_5));
         profilList.add(new Profil("Matthew", "Pierre", R.drawable.old_6));
 //        profilList.add(new Profil("Matthew", "Pierre", R.drawable.old_7));
 //        profilList.add(new Profil("Matthew", "Pierre", R.drawable.old_8));
-//        profilList.add(new Profil("Matthew", "Pierre", R.drawable.old_9));
-//        profilList.add(new Profil("Matthew", "Pierre", R.drawable.old_10));
+//        profilList.add(new Profil("Matthew", "Pierre", R.drawable.old_3_small));
+        profilList.add(new Profil("Matthew", "Pierre", R.drawable.old_11));
 //        profilList.add(new Profil("Matthew", "Pierre", R.drawable.old_11));
 
         timer = new Timer();
