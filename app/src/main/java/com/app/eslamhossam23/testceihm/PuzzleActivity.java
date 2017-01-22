@@ -236,11 +236,13 @@ public class PuzzleActivity extends AppCompatActivity {
 
     private void help() {
         Random random = new Random();
+        Bitmap rightAnswer = suggestions.get(missingPiece);
         int removedItem = random.nextInt(suggestions.size());
         while (removedItem == missingPiece){
             removedItem = random.nextInt(suggestions.size());
         }
         suggestions.remove(removedItem);
+        missingPiece = suggestions.indexOf(rightAnswer);
         GridView gridView = (GridView) findViewById(R.id.suggestions);
         ArrayAdapter arrayAdapter = new CustomAdapter();
         gridView.setAdapter(arrayAdapter);
