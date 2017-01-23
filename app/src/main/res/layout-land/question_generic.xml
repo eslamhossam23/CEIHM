@@ -3,6 +3,32 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/colorAccent"
+        android:id="@+id/bubble"
+        android:adjustViewBounds="true"
+        android:maxHeight="110dp"
+        android:minHeight="110dp"
+        android:layout_marginTop="15dp"
+        android:layout_alignParentTop="true"
+        />
+
+    <TextView
+        android:text=""
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/question_text"
+        android:textSize="24sp"
+        android:adjustViewBounds="false"
+        android:layout_marginEnd="20dp"
+        android:layout_alignBottom="@+id/avatar_question"
+        android:layout_toEndOf="@id/avatar_question"
+        android:textStyle="normal|bold"
+        />
+
     <ImageView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -11,28 +37,6 @@
         android:adjustViewBounds="true"
         android:maxHeight="80dp"
         android:maxWidth="80dp"
-        android:layout_alignParentTop="true"
+        android:layout_alignTop="@+id/bubble"
         android:layout_alignParentStart="true" />
-
-    <ImageView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:srcCompat="@drawable/bubble_square"
-        android:id="@+id/bubble"
-        android:adjustViewBounds="true"
-        android:maxHeight="110dp"
-        android:maxWidth="800dp"
-        android:layout_marginTop="15dp"
-        android:layout_alignParentTop="true"
-        android:layout_toEndOf="@+id/avatar_question" />
-    <TextView
-        android:text=""
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/question_text"
-        android:textSize="14sp"
-        android:adjustViewBounds="false"
-        android:layout_marginEnd="13dp"
-        android:layout_alignBottom="@+id/avatar_question"
-        android:layout_alignEnd="@+id/bubble" />
 </RelativeLayout>

@@ -8,6 +8,7 @@ import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
@@ -28,21 +29,19 @@ public class MainActivity extends AppCompatActivity {
     public static Timer timer;
     public static final String HINT_TEXT = "Appuyez pour selectionner votre image.";
     public static final int PERIOD = 20000;
-    public static final int INACTIVITY_DELAY = 500;
+    public static final int INACTIVITY_DELAY = 20000;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-//        profilList.add(new Profil("Dubois","Vanessa", R.drawable.old_1));
+        profilList.add(new Profil("Dubois","Vanessa", R.drawable.old_1));
         profilList.add(new Profil("Durand", "Roger", R.drawable.old_2));
-//        profilList.add(new Profil("Matthew", "Pierre", R.drawable.old_4));
-//        profilList.add(new Profil("Matthew", "Pierre", R.drawable.old_5));
+        profilList.add(new Profil("Matthew", "Pierre", R.drawable.old_4));
+        profilList.add(new Profil("Matthew", "Pierre", R.drawable.old_5));
         profilList.add(new Profil("Matthew", "Pierre", R.drawable.old_6));
-//        profilList.add(new Profil("Matthew", "Pierre", R.drawable.old_7));
-//        profilList.add(new Profil("Matthew", "Pierre", R.drawable.old_8));
-//        profilList.add(new Profil("Matthew", "Pierre", R.drawable.old_3_small));
-        profilList.add(new Profil("Matthew", "Pierre", R.drawable.old_11));
-//        profilList.add(new Profil("Matthew", "Pierre", R.drawable.old_11));
+        profilList.add(new Profil("Matthew", "Pierre", R.drawable.old_7));
+        profilList.add(new Profil("Matthew", "Pierre", R.drawable.old_8));
+        profilList.add(new Profil("Matthew", "Pierre", R.drawable.old_3_small));
 
         timer = new Timer();
         super.onCreate(savedInstanceState);
@@ -62,12 +61,12 @@ public class MainActivity extends AppCompatActivity {
                     }
                 });
             }
-        }, INACTIVITY_DELAY, PERIOD);
+        }, 0, PERIOD);
 
     }
 
     public void showHint(String hint) {
-        AnimatorSet animatorSet = new AnimatorSet();
+//        AnimatorSet animatorSet = new AnimatorSet();
         final View guideView = findViewById(R.id.guide);
         guideView.setAlpha(0);
         guideView.setVisibility(View.VISIBLE);
@@ -77,48 +76,78 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onAnimationUpdate(ValueAnimator animation) {
                 guideView.setAlpha((Float) animation.getAnimatedValue());
-            }
-        });
-        final ImageView cursor = (ImageView) findViewById(R.id.cursor);
-        final float oldCursorLocationX = cursor.getX();
-        final ImageView imageHolder = (ImageView) findViewById(R.id.image_placeholder);
-        ValueAnimator valueAnimator2 = ValueAnimator.ofFloat(cursor.getX(), imageHolder.getX() + 30f);
-        valueAnimator2.setDuration(2000);
-        valueAnimator2.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
-            @Override
-            public void onAnimationUpdate(ValueAnimator animation) {
-                cursor.setX((Float) animation.getAnimatedValue());
-                if ((float) animation.getAnimatedValue() == imageHolder.getX() + 30f) {
-                    cursor.setImageResource(R.drawable.cursor_click);
-                    hideHint(oldCursorLocationX);
+                if((Float)animation.getAnimatedValue() == 1f){
+                    hideHint();
                 }
             }
         });
-        animatorSet.play(valueAnimator).before(valueAnimator2);
-        animatorSet.start();
+//        final ImageView cursor = (ImageView) findViewById(R.id.cursor);
+//        final float oldCursorLocationX = cursor.getX();
+//        final ImageView imageHolder = (ImageView) findViewById(R.id.image_placeholder);
+//        ValueAnimator valueAnimator2 = ValueAnimator.ofFloat(cursor.getX(), imageHolder.getX() + 30f);
+//        valueAnimator2.setDuration(2000);
+//        valueAnimator2.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+//            @Override
+//            public void onAnimationUpdate(ValueAnimator animation) {
+//                cursor.setX((Float) animation.getAnimatedValue());
+//                if ((float) animation.getAnimatedValue() == imageHolder.getX() + 30f) {
+//                    cursor.setImageResource(R.drawable.cursor_click);
+//                    hideHint(oldCursorLocationX);
+//                }
+//            }
+//        });
+//        animatorSet.play(valueAnimator).before(valueAnimator2);
+        valueAnimator.start();
+//        animatorSet.start();
         findViewById(R.id.listProfils).setVisibility(View.INVISIBLE);
         TextView hintTextView = (TextView) guideView.findViewById(R.id.hint);
         hintTextView.setText(hint);
     }
 
-    public void hideHint(final float oldCursorLocationX) {
+    public void hideHint() {
         final View guideView = findViewById(R.id.guide);
         ValueAnimator valueAnimator = ValueAnimator.ofFloat(guideView.getAlpha(), 0f);
-        valueAnimator.setDuration(3000);
+        valueAnimator.setDuration(2000);
         valueAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
             @Override
             public void onAnimationUpdate(ValueAnimator animation) {
                 guideView.setAlpha((Float) animation.getAnimatedValue());
                 if ((float) animation.getAnimatedValue() == 0f) {
-                    ImageView cursor = (ImageView) findViewById(R.id.cursor);
-                    cursor.setImageResource(R.drawable.cursor);
-                    cursor.setX(oldCursorLocationX);
+//                    ImageView cursor = (ImageView) findViewById(R.id.cursor);
                     guideView.setVisibility(View.INVISIBLE);
                     findViewById(R.id.listProfils).setVisibility(View.VISIBLE);
                 }
             }
         });
         valueAnimator.start();
+    }
+
+    @Override
+    public boolean onTouchEvent(MotionEvent event) {
+        pauseTimer();
+        startTimer();
+        return super.onTouchEvent(event);
+    }
+
+
+    private void startTimer() {
+        timer = new Timer();
+        timer.schedule(new TimerTask() {
+            @Override
+            public void run() {
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+//                        final ImageView cursor = (ImageView) findViewById(R.id.cursor);
+                        showHint(HINT_TEXT);
+                    }
+                });
+            }
+        }, INACTIVITY_DELAY, PERIOD);
+    }
+
+    private void pauseTimer() {
+        timer.cancel();
     }
 
 

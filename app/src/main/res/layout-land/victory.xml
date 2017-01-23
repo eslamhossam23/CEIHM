@@ -4,20 +4,6 @@
     android:layout_width="match_parent" android:layout_height="match_parent">
 
 
-    <TextView
-        android:text="Bonne Réponse"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/textView"
-        android:textSize="36sp"
-        android:fontFamily="sans-serif"
-        android:textStyle="normal|bold"
-        android:textAllCaps="false"
-        android:textAlignment="center"
-        android:textColor="@android:color/holo_blue_dark"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true" />
-
     <ImageView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -42,8 +28,23 @@
         app:srcCompat="@drawable/thumbs_up"
         android:id="@+id/thumbs_up"
         android:adjustViewBounds="true"
-        android:maxHeight="100dp"
-        android:maxWidth="100dp"
+        android:maxHeight="150dp"
+        android:maxWidth="150dp"
         android:layout_centerVertical="true"
         android:layout_centerHorizontal="true" />
+
+    <TextView
+        android:text="Bonne Réponse"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/textView"
+        android:textSize="36sp"
+        android:fontFamily="sans-serif"
+        android:textStyle="normal|bold"
+        android:textAllCaps="false"
+        android:textAlignment="center"
+        android:textColor="@android:color/holo_blue_dark"
+        android:layout_below="@+id/thumbs_up"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="18dp" />
 </RelativeLayout>

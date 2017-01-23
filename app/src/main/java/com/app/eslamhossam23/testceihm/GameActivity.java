@@ -30,25 +30,42 @@ public class GameActivity extends AppCompatActivity {
     public static final int PERIOD = 20000;
     public static final int INACTIVITY_DELAY = 20000;
     public static final String HINT_TEXT = "Appuyez sur un thème pour le sélectionner.";
-    List<Theme> themes = new ArrayList<>();
+//    List<Theme> themes = new ArrayList<>();
     public static Timer timer;
     public static int imageID;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         imageID = getIntent().getIntExtra("image", R.drawable.accueil);
-        themes.add(new Theme(imageID, "Moi"));
-        themes.add(new Theme(R.drawable.mariage, "Mariage"));
-        themes.add(new Theme(R.drawable.family, "Famille"));
-        themes.add(new Theme(R.drawable.children_1, "Enfants"));
+//        themes.add(new Theme(imageID, "Moi"));
+//        themes.add(new Theme(R.drawable.mariage, "Mariage"));
+//        themes.add(new Theme(R.drawable.family, "Famille"));
+//        themes.add(new Theme(R.drawable.children_1, "Enfants"));
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.game_layout);
+        ImageView moi = (ImageView)findViewById(R.id.moi);
+        moi.setImageResource(imageID);
+        moi.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                        Intent intent = new Intent(GameActivity.this, AccueilActivity.class);
+                        startActivity(intent);
+            }
+        });
+        ImageView famille = (ImageView)findViewById(R.id.family);
+        famille.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(GameActivity.this, PuzzleActivity.class);
+                startActivity(intent);
+            }
+        });
 //        String prenom = getIntent().getExtras().getString("prenom");
 //        Toast.makeText(this, prenom, Toast.LENGTH_SHORT).show();
-        GridView gridView = (GridView) findViewById(R.id.listCategories);
-        ArrayAdapter arrayAdapter = new ListAdapter();
-        gridView.setAdapter(arrayAdapter);
+//        GridView gridView = (GridView) findViewById(R.id.listCategories);
+//        ArrayAdapter arrayAdapter = new ListAdapter();
+//        gridView.setAdapter(arrayAdapter);
         timer = new Timer();
         timer.schedule(new TimerTask() {
             @Override
@@ -62,12 +79,20 @@ public class GameActivity extends AppCompatActivity {
                 });
 
             }
-        }, 500, PERIOD);
+        }, 0, PERIOD);
+
 
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        ImageView moi = (ImageView)findViewById(R.id.moi);
+        moi.setImageResource(imageID);
+    }
+
     public void showHint(final String hint) {
-        final AnimatorSet animatorSet = new AnimatorSet();
+//        final AnimatorSet animatorSet = new AnimatorSet();
         final View guideView = findViewById(R.id.guide);
         guideView.setAlpha(0);
         guideView.setVisibility(View.VISIBLE);
@@ -77,43 +102,47 @@ public class GameActivity extends AppCompatActivity {
             @Override
             public void onAnimationUpdate(ValueAnimator animation) {
                 guideView.setAlpha((Float) animation.getAnimatedValue());
-            }
-        });
-        final ImageView cursor = (ImageView) findViewById(R.id.cursor);
-        final float oldCursorLocationX = cursor.getX();
-        final ImageView imageHolder = (ImageView) findViewById(R.id.image_placeholder);
-        final ValueAnimator valueAnimator2 = ValueAnimator.ofFloat(cursor.getX(), imageHolder.getX() + 30f);
-        valueAnimator2.setDuration(2000);
-        valueAnimator2.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
-            @Override
-            public void onAnimationUpdate(ValueAnimator animation) {
-                cursor.setX((Float) animation.getAnimatedValue());
-                if((float) animation.getAnimatedValue() == imageHolder.getX() + 30f){
-                    cursor.setImageResource(R.drawable.cursor_click);
-                    hideHint(oldCursorLocationX);
+                if((Float)animation.getAnimatedValue() == 1f){
+                   hideHint();
                 }
             }
         });
-        animatorSet.play(valueAnimator).before(valueAnimator2);
-        animatorSet.start();
+//        final ImageView cursor = (ImageView) findViewById(R.id.cursor);
+//        final float oldCursorLocationX = cursor.getX();
+//        final ImageView imageHolder = (ImageView) findViewById(R.id.image_placeholder);
+//        final ValueAnimator valueAnimator2 = ValueAnimator.ofFloat(cursor.getX(), imageHolder.getX() + 30f);
+//        valueAnimator2.setDuration(2000);
+//        valueAnimator2.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+//            @Override
+//            public void onAnimationUpdate(ValueAnimator animation) {
+//                cursor.setX((Float) animation.getAnimatedValue());
+//                if((float) animation.getAnimatedValue() == imageHolder.getX() + 30f){
+//                    cursor.setImageResource(R.drawable.cursor_click);
+//                    hideHint(oldCursorLocationX);
+//                }
+//            }
+//        });
+//        animatorSet.play(valueAnimator).before(valueAnimator2);
+//        animatorSet.start();
+        valueAnimator.start();
         TextView hintTextView = (TextView) guideView.findViewById(R.id.hint);
         hintTextView.setText(hint);
         findViewById(R.id.listCategories).setVisibility(View.INVISIBLE);
     }
 
 
-    public void hideHint(final float oldCursorLocationX) {
+    public void hideHint() {
         final View guideView = findViewById(R.id.guide);
         ValueAnimator valueAnimator = ValueAnimator.ofFloat(guideView.getAlpha(), 0f);
-        valueAnimator.setDuration(3000);
+        valueAnimator.setDuration(2000);
         valueAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
             @Override
             public void onAnimationUpdate(ValueAnimator animation) {
                 guideView.setAlpha((Float) animation.getAnimatedValue());
                 if((float) animation.getAnimatedValue() == 0f){
-                    ImageView cursor = (ImageView) findViewById(R.id.cursor);
-                    cursor.setImageResource(R.drawable.cursor);
-                    cursor.setX(oldCursorLocationX);
+//                    ImageView cursor = (ImageView) findViewById(R.id.cursor);
+//                    cursor.setImageResource(R.drawable.cursor);
+//                    cursor.setX(oldCursorLocationX);
                     guideView.setVisibility(View.INVISIBLE);
                     findViewById(R.id.listCategories).setVisibility(View.VISIBLE);
                 }
@@ -122,53 +151,80 @@ public class GameActivity extends AppCompatActivity {
         valueAnimator.start();
     }
 
-    private class ListAdapter extends ArrayAdapter {
-        public ListAdapter() {
-            super(GameActivity.this, R.layout.simple_list_item_2, themes);
-        }
-
-        @NonNull
-        @Override
-        public View getView(int position, View convertView, @NonNull ViewGroup parent) {
-            View itemView = convertView;
-            if (itemView == null) {
-                itemView = getLayoutInflater().inflate(R.layout.simple_list_item_2, parent, false);
-            }
-            final Theme theme = themes.get(position);
-            ImageView imageView = (ImageView) itemView.findViewById(R.id.imageView2);
-            TextView textView = (TextView) itemView.findViewById(R.id.textView2);
-            textView.setText(theme.getName());
-            imageView.setImageResource(theme.getIdImage());
-            imageView.setTag(theme.getIdImage());
-            itemView.setOnClickListener(new View.OnClickListener() {
-//                String nom = theme.getName();
-                @Override
-                public void onClick(final View v) {
-//                    ValueAnimator valueAnimator = ValueAnimator.ofFloat(v.getY(), v.getY() + 50f);
-//                    valueAnimator.setDuration(1000);
-//                    valueAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
-//                        @Override
-//                        public void onAnimationUpdate(ValueAnimator animation) {
-//                            v.setY((Float) animation.getAnimatedValue());
-//                        }
-//                    });
-//                    valueAnimator.start();
-//                    Toast.makeText(getContext(), "Vous avez selectionné " + nom, Toast.LENGTH_SHORT).show();
-                    if((int) v.findViewById(R.id.imageView2).getTag() == imageID){
-                        Intent intent = new Intent(GameActivity.this, AccueilActivity.class);
-                        startActivity(intent);
-                    }else if((int) v.findViewById(R.id.imageView2).getTag() == R.drawable.family) {
-                        Intent intent = new Intent(GameActivity.this, PuzzleActivity.class);
-                        startActivity(intent);
-                    }else if((int) v.findViewById(R.id.imageView2).getTag() == R.drawable.children_1) {
-                        Intent intent = new Intent(GameActivity.this,Nb_enfant.class);
-                        startActivity(intent);
+    private void startTimer() {
+        timer = new Timer();
+        timer.schedule(new TimerTask() {
+            @Override
+            public void run() {
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+//                        final ImageView cursor = (ImageView) findViewById(R.id.cursor);
+                        showHint(HINT_TEXT);
                     }
-                }
-            });
-            return itemView;
-//            return super.getView(position, convertView, parent);
-        }
+                });
+            }
+        }, INACTIVITY_DELAY, PERIOD);
     }
+
+    @Override
+    public boolean onTouchEvent(MotionEvent event) {
+        pauseTimer();
+        startTimer();
+        return super.onTouchEvent(event);
+    }
+
+    private void pauseTimer() {
+        timer.cancel();
+    }
+
+//    private class ListAdapter extends ArrayAdapter {
+//        public ListAdapter() {
+//            super(GameActivity.this, R.layout.simple_list_item_2, themes);
+//        }
+//
+//        @NonNull
+//        @Override
+//        public View getView(int position, View convertView, @NonNull ViewGroup parent) {
+//            View itemView = convertView;
+//            if (itemView == null) {
+//                itemView = getLayoutInflater().inflate(R.layout.simple_list_item_2, parent, false);
+//            }
+//            final Theme theme = themes.get(position);
+//            ImageView imageView = (ImageView) itemView.findViewById(R.id.imageView2);
+//            TextView textView = (TextView) itemView.findViewById(R.id.textView2);
+//            textView.setText(theme.getName());
+//            imageView.setImageResource(theme.getIdImage());
+//            imageView.setTag(theme.getIdImage());
+//            itemView.setOnClickListener(new View.OnClickListener() {
+////                String nom = theme.getName();
+//                @Override
+//                public void onClick(final View v) {
+////                    ValueAnimator valueAnimator = ValueAnimator.ofFloat(v.getY(), v.getY() + 50f);
+////                    valueAnimator.setDuration(1000);
+////                    valueAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+////                        @Override
+////                        public void onAnimationUpdate(ValueAnimator animation) {
+////                            v.setY((Float) animation.getAnimatedValue());
+////                        }
+////                    });
+////                    valueAnimator.start();
+////                    Toast.makeText(getContext(), "Vous avez selectionné " + nom, Toast.LENGTH_SHORT).show();
+//                    if((int) v.findViewById(R.id.imageView2).getTag() == imageID){
+//                        Intent intent = new Intent(GameActivity.this, AccueilActivity.class);
+//                        startActivity(intent);
+//                    }else if((int) v.findViewById(R.id.imageView2).getTag() == R.drawable.family) {
+//                        Intent intent = new Intent(GameActivity.this, PuzzleActivity.class);
+//                        startActivity(intent);
+//                    }else if((int) v.findViewById(R.id.imageView2).getTag() == R.drawable.children_1) {
+//                        Intent intent = new Intent(GameActivity.this,Nb_enfant.class);
+//                        startActivity(intent);
+//                    }
+//                }
+//            });
+//            return itemView;
+////            return super.getView(position, convertView, parent);
+//        }
+//    }
 
 }

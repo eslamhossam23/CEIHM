@@ -57,7 +57,7 @@ public class AccueilActivity extends AppCompatActivity {
                     }
                 });
             }
-        }, 500, PERIOD);
+        }, 0, PERIOD);
     }
 
     @Override
@@ -111,14 +111,14 @@ public class AccueilActivity extends AppCompatActivity {
         themes.add(new Theme(R.drawable.spring, "Spring"));
         themes.add(new Theme(R.drawable.summer, "Summer"));
         GridView gridView = (GridView) findViewById(R.id.grid);
-        ArrayAdapter arrayAdapter = new AccueilActivity.ListAdapter();
+        ArrayAdapter arrayAdapter = new AccueilActivity.ListAdapter(themes);
         gridView.setAdapter(arrayAdapter);
         TextView textView = (TextView) findViewById(R.id.question_text);
         textView.setText(questions.get(question));
     }
 
     public void showHint(String hint) {
-        AnimatorSet animatorSet = new AnimatorSet();
+//        AnimatorSet animatorSet = new AnimatorSet();
         final View guideView = findViewById(R.id.guide);
         guideView.setAlpha(0);
         guideView.setVisibility(View.VISIBLE);
@@ -128,43 +128,47 @@ public class AccueilActivity extends AppCompatActivity {
             @Override
             public void onAnimationUpdate(ValueAnimator animation) {
                 guideView.setAlpha((Float) animation.getAnimatedValue());
-            }
-        });
-        final ImageView cursor = (ImageView) findViewById(R.id.cursor);
-        final float oldCursorLocationX = cursor.getX();
-        final ImageView imageHolder = (ImageView) findViewById(R.id.image_placeholder);
-        ValueAnimator valueAnimator2 = ValueAnimator.ofFloat(cursor.getX(), imageHolder.getX() + 30f);
-        valueAnimator2.setDuration(2000);
-        valueAnimator2.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
-            @Override
-            public void onAnimationUpdate(ValueAnimator animation) {
-                cursor.setX((Float) animation.getAnimatedValue());
-                if ((float) animation.getAnimatedValue() == imageHolder.getX() + 30f) {
-                    cursor.setImageResource(R.drawable.cursor_click);
-                    hideHint(oldCursorLocationX);
+                if((Float) animation.getAnimatedValue() == 0f){
+                    hideHint();
                 }
             }
         });
-        animatorSet.play(valueAnimator).before(valueAnimator2);
-        animatorSet.start();
+//        final ImageView cursor = (ImageView) findViewById(R.id.cursor);
+//        final float oldCursorLocationX = cursor.getX();
+//        final ImageView imageHolder = (ImageView) findViewById(R.id.image_placeholder);
+//        ValueAnimator valueAnimator2 = ValueAnimator.ofFloat(cursor.getX(), imageHolder.getX() + 30f);
+//        valueAnimator2.setDuration(2000);
+//        valueAnimator2.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+//            @Override
+//            public void onAnimationUpdate(ValueAnimator animation) {
+//                cursor.setX((Float) animation.getAnimatedValue());
+//                if ((float) animation.getAnimatedValue() == imageHolder.getX() + 30f) {
+//                    cursor.setImageResource(R.drawable.cursor_click);
+//                    hideHint(oldCursorLocationX);
+//                }
+//            }
+//        });
+//        animatorSet.play(valueAnimator).before(valueAnimator2);
+//        animatorSet.start();
+        valueAnimator.start();
         findViewById(R.id.question).setVisibility(View.INVISIBLE);
         TextView hintTextView = (TextView) guideView.findViewById(R.id.hint);
         hintTextView.setText(hint);
     }
 
 
-    public void hideHint(final float oldCursorLocationX) {
+    public void hideHint() {
         final View guideView = findViewById(R.id.guide);
         ValueAnimator valueAnimator = ValueAnimator.ofFloat(guideView.getAlpha(), 0f);
-        valueAnimator.setDuration(3000);
+        valueAnimator.setDuration(2000);
         valueAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
             @Override
             public void onAnimationUpdate(ValueAnimator animation) {
                 guideView.setAlpha((Float) animation.getAnimatedValue());
                 if ((float) animation.getAnimatedValue() == 0f) {
-                    ImageView cursor = (ImageView) findViewById(R.id.cursor);
-                    cursor.setImageResource(R.drawable.cursor);
-                    cursor.setX(oldCursorLocationX);
+//                    ImageView cursor = (ImageView) findViewById(R.id.cursor);
+//                    cursor.setImageResource(R.drawable.cursor);
+//                    cursor.setX(oldCursorLocationX);
                     guideView.setVisibility(View.INVISIBLE);
                     findViewById(R.id.question).setVisibility(View.VISIBLE);
 
@@ -194,7 +198,6 @@ public class AccueilActivity extends AppCompatActivity {
         timer.cancel();
         findViewById(R.id.guide).setVisibility(View.INVISIBLE);
         findViewById(R.id.question).setVisibility(View.INVISIBLE);
-        nextQuestion();
     }
 
     public void hideVictory() {
@@ -207,6 +210,7 @@ public class AccueilActivity extends AppCompatActivity {
                 victoryView.setAlpha((Float) animation.getAnimatedValue());
                 if((Float)animation.getAnimatedValue() == 0){
                     findViewById(R.id.question).setVisibility(View.VISIBLE);
+                    nextQuestion();
                 }
             }
         });
@@ -222,6 +226,23 @@ public class AccueilActivity extends AppCompatActivity {
     public void nextQuestion() {
         question++;
         if(questions.size() == question){
+            findViewById(R.id.question).setVisibility(View.INVISIBLE);
+            question = 0;
+            Timer timer = new Timer();
+            timer.schedule(new TimerTask() {
+                @Override
+                public void run() {
+                  runOnUiThread(new Runnable() {
+                      @Override
+                      public void run() {
+                          Intent intent = new Intent(AccueilActivity.this, GameActivity.class);
+                          intent.putExtra("image", GameActivity.imageID);
+                          startActivity(intent);
+                          finish();
+                      }
+                  });
+                }
+            }, 0);
             return;
         }
         TextView textView = (TextView) findViewById(R.id.question_text);
@@ -294,8 +315,23 @@ public class AccueilActivity extends AppCompatActivity {
         showSecondChance();
     }
 
+    public void helpTheme(List<Theme> reponses, int reponseJuste){
+        Random random = new Random();
+        int removedItem = random.nextInt(reponses.size());
+        while (removedItem == reponseJuste){
+            removedItem = random.nextInt(reponses.size());
+        }
+        reponses.remove(removedItem);
+        GridView gridView = (GridView) findViewById(R.id.grid);
+        ArrayAdapter arrayAdapter = new AccueilActivity.ListAdapter(reponses);
+        gridView.setAdapter(arrayAdapter);
+        showSecondChance();
+    }
+
     private void showSecondChance() {
         final View tryAgain = findViewById(R.id.secondChance);
+        final View questions = findViewById(R.id.question);
+        questions.setVisibility(View.INVISIBLE);
         tryAgain.setAlpha(0);
         tryAgain.setVisibility(View.VISIBLE);
         ValueAnimator valueAnimator = ValueAnimator.ofFloat(0f, 1f);
@@ -314,6 +350,7 @@ public class AccueilActivity extends AppCompatActivity {
                 tryAgain.setAlpha((Float) animation.getAnimatedValue());
                 if((float)animation.getAnimatedValue() == 0f){
                     tryAgain.setVisibility(View.GONE);
+                    questions.setVisibility(View.VISIBLE);
                 }
             }
         });
@@ -323,9 +360,10 @@ public class AccueilActivity extends AppCompatActivity {
     }
 
     private class ListAdapter extends ArrayAdapter {
-
-        public ListAdapter() {
+    public List<Theme> themes;
+        public ListAdapter(List<Theme> themes) {
             super(AccueilActivity.this, R.layout.simple_list_item_2, themes);
+            this.themes = themes;
         }
 
 
@@ -358,7 +396,7 @@ public class AccueilActivity extends AppCompatActivity {
                         if (v.findViewById(R.id.imageView2).getTag().equals(reponses.get(question))) {
                             showVictory();
                         }else {
-                            showSecondChance();
+                            helpTheme(themes, 0);
                         }
                     }
                 }

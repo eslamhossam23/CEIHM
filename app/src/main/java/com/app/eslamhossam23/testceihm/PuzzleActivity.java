@@ -2,6 +2,7 @@ package com.app.eslamhossam23.testceihm;
 
 import android.animation.AnimatorSet;
 import android.animation.ValueAnimator;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
@@ -73,7 +74,7 @@ public class PuzzleActivity extends AppCompatActivity {
                     }
                 });
             }
-        }, 500, PERIOD);
+        }, 0, PERIOD);
     }
 
     private void startTimer() {
@@ -104,7 +105,7 @@ public class PuzzleActivity extends AppCompatActivity {
     }
 
     public void showHint(String hint) {
-        AnimatorSet animatorSet = new AnimatorSet();
+//        AnimatorSet animatorSet = new AnimatorSet();
         final View guideView = findViewById(R.id.guide);
         guideView.setAlpha(0);
         guideView.setVisibility(View.VISIBLE);
@@ -114,25 +115,29 @@ public class PuzzleActivity extends AppCompatActivity {
             @Override
             public void onAnimationUpdate(ValueAnimator animation) {
                 guideView.setAlpha((Float) animation.getAnimatedValue());
-            }
-        });
-        final ImageView cursor = (ImageView) findViewById(R.id.cursor);
-        final float oldCursorLocationX = cursor.getX();
-        final ImageView imageHolder = (ImageView) findViewById(R.id.image_placeholder);
-        ValueAnimator valueAnimator2 = ValueAnimator.ofFloat(cursor.getX(), imageHolder.getX() + 30f);
-        valueAnimator2.setDuration(2000);
-        valueAnimator2.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
-            @Override
-            public void onAnimationUpdate(ValueAnimator animation) {
-                cursor.setX((Float) animation.getAnimatedValue());
-                if ((float) animation.getAnimatedValue() == imageHolder.getX() + 30f) {
-                    cursor.setImageResource(R.drawable.cursor_click);
-                    hideHint(oldCursorLocationX);
+                if((Float) animation.getAnimatedValue() == 1f){
+                    hideHint();
                 }
             }
         });
-        animatorSet.play(valueAnimator).before(valueAnimator2);
-        animatorSet.start();
+//        final ImageView cursor = (ImageView) findViewById(R.id.cursor);
+//        final float oldCursorLocationX = cursor.getX();
+//        final ImageView imageHolder = (ImageView) findViewById(R.id.image_placeholder);
+//        ValueAnimator valueAnimator2 = ValueAnimator.ofFloat(cursor.getX(), imageHolder.getX() + 30f);
+//        valueAnimator2.setDuration(2000);
+//        valueAnimator2.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+//            @Override
+//            public void onAnimationUpdate(ValueAnimator animation) {
+//                cursor.setX((Float) animation.getAnimatedValue());
+//                if ((float) animation.getAnimatedValue() == imageHolder.getX() + 30f) {
+//                    cursor.setImageResource(R.drawable.cursor_click);
+//                    hideHint(oldCursorLocationX);
+//                }
+//            }
+//        });
+//        animatorSet.play(valueAnimator).before(valueAnimator2);
+//        animatorSet.start();
+        valueAnimator.start();
         findViewById(R.id.question).setVisibility(View.GONE);
         findViewById(R.id.suggestions).setVisibility(View.GONE);
         TextView hintTextView = (TextView) guideView.findViewById(R.id.hint);
@@ -140,18 +145,18 @@ public class PuzzleActivity extends AppCompatActivity {
     }
 
 
-    public void hideHint(final float oldCursorLocationX) {
+    public void hideHint() {
         final View guideView = findViewById(R.id.guide);
         ValueAnimator valueAnimator = ValueAnimator.ofFloat(guideView.getAlpha(), 0f);
-        valueAnimator.setDuration(3000);
+        valueAnimator.setDuration(2000);
         valueAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
             @Override
             public void onAnimationUpdate(ValueAnimator animation) {
                 guideView.setAlpha((Float) animation.getAnimatedValue());
                 if ((float) animation.getAnimatedValue() == 0f) {
-                    ImageView cursor = (ImageView) findViewById(R.id.cursor);
-                    cursor.setImageResource(R.drawable.cursor);
-                    cursor.setX(oldCursorLocationX);
+//                    ImageView cursor = (ImageView) findViewById(R.id.cursor);
+//                    cursor.setImageResource(R.drawable.cursor);
+//                    cursor.setX(oldCursorLocationX);
                     guideView.setVisibility(View.GONE);
                     findViewById(R.id.question).setVisibility(View.VISIBLE);
                     findViewById(R.id.suggestions).setVisibility(View.VISIBLE);
@@ -173,6 +178,7 @@ public class PuzzleActivity extends AppCompatActivity {
     private void showVictory() {
         final View victoryView = findViewById(R.id.victory);
         final ImageView imageView = (ImageView) findViewById(R.id.image);
+        findViewById(R.id.suggestions).setVisibility(View.GONE);
         Bitmap bitmapSource = BitmapFactory.decodeResource(getResources(), questions.get(currentQuestion));
         imageView.setImageBitmap(bitmapSource);
         victoryView.setAlpha(0);
@@ -227,6 +233,11 @@ public class PuzzleActivity extends AppCompatActivity {
     private void nextQuestion() {
         currentQuestion++;
         if(currentQuestion == questions.size()){
+            Intent intent = new Intent(PuzzleActivity.this, GameActivity.class);
+            intent.putExtra("image", GameActivity.imageID);
+            startActivity(intent);
+            currentQuestion = 0;
+            finish();
             return;
         }
         createPuzzle(2);
