@@ -43,25 +43,25 @@ public class MainActivity extends AppCompatActivity {
         profilList.add(new Profil("Matthew", "Pierre", R.drawable.old_8));
         profilList.add(new Profil("Matthew", "Pierre", R.drawable.old_3_small));
 
-        timer = new Timer();
+//        timer = new Timer();
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         context = this.getBaseContext();
         GridView gridView = (GridView) findViewById(R.id.listProfils);
         ArrayAdapter arrayAdapter = new ListAdapter();
         gridView.setAdapter(arrayAdapter);
-        timer.schedule(new TimerTask() {
-            @Override
-            public void run() {
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-//                        final ImageView cursor = (ImageView) findViewById(R.id.cursor);
-                        showHint(HINT_TEXT);
-                    }
-                });
-            }
-        }, 0, PERIOD);
+//        timer.schedule(new TimerTask() {
+//            @Override
+//            public void run() {
+//                runOnUiThread(new Runnable() {
+//                    @Override
+//                    public void run() {
+////                        final ImageView cursor = (ImageView) findViewById(R.id.cursor);
+//                        showHint(HINT_TEXT);
+//                    }
+//                });
+//            }
+//        }, 0, PERIOD);
 
     }
 
@@ -124,8 +124,8 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
-        pauseTimer();
-        startTimer();
+//        pauseTimer();
+//        startTimer();
         return super.onTouchEvent(event);
     }
 

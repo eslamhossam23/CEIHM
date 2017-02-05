@@ -27,6 +27,6 @@
     android:id="@+id/listProfils" />
 
     <include layout="@layout/guide" android:layout_height="match_parent"
-        android:layout_width="match_parent" android:id="@+id/guide"/>
+        android:layout_width="match_parent" android:id="@+id/guide" android:visibility="gone"/>
 
 </RelativeLayout>

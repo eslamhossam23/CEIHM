@@ -21,6 +21,7 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Random;
 import java.util.Timer;
@@ -30,12 +31,15 @@ public class PuzzleActivity extends AppCompatActivity {
     public List<Bitmap> suggestions = new ArrayList<>();
     public List<Integer> questions = new ArrayList<>();
     public static int currentQuestion = 0;
-    public static int missingPiece;
+    public static int[] missingPiece = new int[2];
+    public static int[] missingPieceImage = new int[2];
     public static final int PERIOD = 20000;
     public static final int INACTIVITY_DELAY = 20000;
     public static final String HINT_TEXT = "Appuyez sur une image pour selectionner la bonne réponse.";
     public static Timer timer;
-
+    public static int difficulty = 2;
+    public static int rightAnswers = 0;
+    public static HashMap<Integer, Integer> indexImagePair = new HashMap<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,54 +53,58 @@ public class PuzzleActivity extends AppCompatActivity {
         gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                if(position == missingPiece){
-                    showVictory();
-                    pauseTimer();
-                    startTimer();
-                }else{
-                    help();
-                    pauseTimer();
-                    startTimer();
+                if(position == missingPiece[0]){
+                    showVictory(missingPieceImage[0]);
+//                    pauseTimer();
+//                    startTimer();
+                }else if (position == missingPiece[1] && difficulty == 3){
+                    showVictory(missingPieceImage[1]);
+//                    pauseTimer();
+//                    startTimer();
+                } else{
+                    help(position);
+//                    pauseTimer();
+//                    startTimer();
                 }
             }
         });
         TextView textView = (TextView) findViewById(R.id.question_text);
-        textView.setText("Choisissez la partie qui manque.");
-        timer = new Timer();
-        timer.schedule(new TimerTask() {
-            @Override
-            public void run() {
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-//                        final ImageView cursor = (ImageView) findViewById(R.id.cursor);
-                        showHint(HINT_TEXT);
-                    }
-                });
-            }
-        }, 0, PERIOD);
+        textView.setText("Choisissez la partie manquante");
+//        timer = new Timer();
+//        timer.schedule(new TimerTask() {
+//            @Override
+//            public void run() {
+//                runOnUiThread(new Runnable() {
+//                    @Override
+//                    public void run() {
+////                        final ImageView cursor = (ImageView) findViewById(R.id.cursor);
+//                        showHint(HINT_TEXT);
+//                    }
+//                });
+//            }
+//        }, 0, PERIOD);
     }
 
     private void startTimer() {
-        timer = new Timer();
-        timer.schedule(new TimerTask() {
-            @Override
-            public void run() {
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-//                        final ImageView cursor = (ImageView) findViewById(R.id.cursor);
-                        showHint(HINT_TEXT);
-                    }
-                });
-            }
-        }, INACTIVITY_DELAY, PERIOD);
+//        timer = new Timer();
+//        timer.schedule(new TimerTask() {
+//            @Override
+//            public void run() {
+//                runOnUiThread(new Runnable() {
+//                    @Override
+//                    public void run() {
+////                        final ImageView cursor = (ImageView) findViewById(R.id.cursor);
+//                        showHint(HINT_TEXT);
+//                    }
+//                });
+//            }
+//        }, INACTIVITY_DELAY, PERIOD);
     }
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
-        pauseTimer();
-        startTimer();
+//        pauseTimer();
+//        startTimer();
         return super.onTouchEvent(event);
     }
 
@@ -175,41 +183,156 @@ public class PuzzleActivity extends AppCompatActivity {
         questions.add(R.drawable.old_11);
     }
 
-    private void showVictory() {
+    private void showVictory(int rightPiece) {
+        Bitmap bitmapSource = BitmapFactory.decodeResource(getResources(), questions.get(currentQuestion));
         final View victoryView = findViewById(R.id.victory);
         final ImageView imageView = (ImageView) findViewById(R.id.image);
-        findViewById(R.id.suggestions).setVisibility(View.GONE);
-        Bitmap bitmapSource = BitmapFactory.decodeResource(getResources(), questions.get(currentQuestion));
-        imageView.setImageBitmap(bitmapSource);
-        victoryView.setAlpha(0);
-        ValueAnimator valueAnimator = ValueAnimator.ofFloat(victoryView.getAlpha(), victoryView.getAlpha() + 1f);
-        valueAnimator.setDuration(2000);
-        valueAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
-            @Override
-            public void onAnimationUpdate(ValueAnimator animation) {
-                victoryView.setAlpha((Float) animation.getAnimatedValue());
-                if((Float) animation.getAnimatedValue() == 1f){
-                    hideVictory();
+        if(difficulty == 2){
+            findViewById(R.id.suggestions).setVisibility(View.GONE);
+            imageView.setImageBitmap(bitmapSource);
+            victoryView.setAlpha(0);
+            ValueAnimator valueAnimator = ValueAnimator.ofFloat(victoryView.getAlpha(), victoryView.getAlpha() + 1f);
+            valueAnimator.setDuration(2000);
+            valueAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+                @Override
+                public void onAnimationUpdate(ValueAnimator animation) {
+                    victoryView.setAlpha((Float) animation.getAnimatedValue());
+                    if((Float) animation.getAnimatedValue() == 1f){
+                        hideVictory();
+                    }
+                }
+            });
+            ValueAnimator valueAnimator2 = ValueAnimator.ofFloat(0f, 1f);
+            valueAnimator2.setDuration(2000);
+            valueAnimator2.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+                @Override
+                public void onAnimationUpdate(ValueAnimator animation) {
+                    imageView.setAlpha((Float) animation.getAnimatedValue());
+                    if((Float) animation.getAnimatedValue() == 1f){
+                        victoryView.setVisibility(View.VISIBLE);
+                        findViewById(R.id.guide).setVisibility(View.GONE);
+                        findViewById(R.id.question).setVisibility(View.GONE);
+                        findViewById(R.id.suggestions).setVisibility(View.GONE);
+                    }
+                }
+            });
+            AnimatorSet animatorSet = new AnimatorSet();
+            animatorSet.play(valueAnimator).after(valueAnimator2);
+            animatorSet.start();
+        }else{
+            rightAnswers++;
+            Bitmap imageWithRightPiece = Bitmap.createBitmap(bitmapSource.getWidth(), bitmapSource.getHeight(), Bitmap.Config.ARGB_8888);
+            Canvas canvas = new Canvas(imageWithRightPiece);
+            int count = 0;
+            for(int i = 0; i < difficulty; i++){
+                for (int j = 0; j < difficulty; j++){
+                    Bitmap piece = Bitmap.createBitmap(bitmapSource, (j * bitmapSource.getWidth())/difficulty, (i * bitmapSource.getHeight())/difficulty, bitmapSource.getWidth()/difficulty, bitmapSource.getHeight()/difficulty);
+                    if(missingPieceImage[0] != count && missingPieceImage[1] != count){
+                        canvas.drawBitmap(piece, (j * bitmapSource.getWidth())/difficulty, (i * bitmapSource.getHeight())/difficulty, null);
+                    }
+                    if(rightAnswers == 1) {
+                        if (rightPiece == count) {
+                            canvas.drawBitmap(piece, (j * bitmapSource.getWidth()) / difficulty, (i * bitmapSource.getHeight()) / difficulty, null);
+                        }
+                    }
+                    count++;
                 }
             }
-        });
-        ValueAnimator valueAnimator2 = ValueAnimator.ofFloat(0f, 1f);
-        valueAnimator2.setDuration(2000);
-        valueAnimator2.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
-            @Override
-            public void onAnimationUpdate(ValueAnimator animation) {
-                imageView.setAlpha((Float) animation.getAnimatedValue());
-                if((Float) animation.getAnimatedValue() == 1f){
-                    victoryView.setVisibility(View.VISIBLE);
-                    findViewById(R.id.guide).setVisibility(View.GONE);
-                    findViewById(R.id.question).setVisibility(View.GONE);
-                    findViewById(R.id.suggestions).setVisibility(View.GONE);
+            if(rightAnswers == 1){
+                imageView.setImageBitmap(imageWithRightPiece);
+                ValueAnimator valueAnimator = ValueAnimator.ofFloat(0f, 1f);
+                valueAnimator.setDuration(1000);
+                valueAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+                    @Override
+                    public void onAnimationUpdate(ValueAnimator animation) {
+                        imageView.setAlpha((Float) animation.getAnimatedValue());
+                    }
+                });
+                valueAnimator.start();
+                Bitmap bitmap;
+                if(indexImagePair.get(rightPiece) == missingPiece[0]){
+                    bitmap = suggestions.get(missingPiece[1]);
+                    suggestions.remove((int)indexImagePair.get(rightPiece));
+                    missingPiece[1] = suggestions.indexOf(bitmap);
+                    indexImagePair.put(missingPieceImage[1], missingPiece[1]);
+                }else{
+                    bitmap = suggestions.get(missingPiece[0]);
+                    suggestions.remove((int)indexImagePair.get(rightPiece));
+                    missingPiece[0] = suggestions.indexOf(bitmap);
+                    indexImagePair.put(missingPieceImage[0], missingPiece[0]);
                 }
+                GridView gridView = (GridView) findViewById(R.id.suggestions);
+                ArrayAdapter arrayAdapter = new CustomAdapter();
+                gridView.setAdapter(arrayAdapter);
+            }else if(rightAnswers == 2){
+                imageView.setImageBitmap(bitmapSource);
+                findViewById(R.id.suggestions).setVisibility(View.GONE);
+                victoryView.setAlpha(0);
+                ValueAnimator valueAnimator = ValueAnimator.ofFloat(victoryView.getAlpha(), victoryView.getAlpha() + 1f);
+                valueAnimator.setDuration(2000);
+                valueAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+                    @Override
+                    public void onAnimationUpdate(ValueAnimator animation) {
+                        victoryView.setAlpha((Float) animation.getAnimatedValue());
+                        if((Float) animation.getAnimatedValue() == 1f){
+                            hideVictory();
+                        }
+                    }
+                });
+                ValueAnimator valueAnimator2 = ValueAnimator.ofFloat(0f, 1f);
+                valueAnimator2.setDuration(2000);
+                valueAnimator2.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+                    @Override
+                    public void onAnimationUpdate(ValueAnimator animation) {
+                        imageView.setAlpha((Float) animation.getAnimatedValue());
+                        if((Float) animation.getAnimatedValue() == 1f){
+                            victoryView.setVisibility(View.VISIBLE);
+                            findViewById(R.id.guide).setVisibility(View.GONE);
+                            findViewById(R.id.question).setVisibility(View.GONE);
+                            findViewById(R.id.suggestions).setVisibility(View.GONE);
+                        }
+                    }
+                });
+                AnimatorSet animatorSet = new AnimatorSet();
+                animatorSet.play(valueAnimator).after(valueAnimator2);
+                animatorSet.start();
             }
-        });
-        AnimatorSet animatorSet = new AnimatorSet();
-        animatorSet.play(valueAnimator).after(valueAnimator2);
-        animatorSet.start();
+        }
+
+//        imageView.setImageBitmap(bitmap);
+//        final View victoryView = findViewById(R.id.victory);
+//        final ImageView imageView = (ImageView) findViewById(R.id.image);
+//        findViewById(R.id.suggestions).setVisibility(View.GONE);
+//        imageView.setImageBitmap(bitmapSource);
+//        victoryView.setAlpha(0);
+//        ValueAnimator valueAnimator = ValueAnimator.ofFloat(victoryView.getAlpha(), victoryView.getAlpha() + 1f);
+//        valueAnimator.setDuration(2000);
+//        valueAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+//            @Override
+//            public void onAnimationUpdate(ValueAnimator animation) {
+//                victoryView.setAlpha((Float) animation.getAnimatedValue());
+//                if((Float) animation.getAnimatedValue() == 1f){
+//                    hideVictory();
+//                }
+//            }
+//        });
+//        ValueAnimator valueAnimator2 = ValueAnimator.ofFloat(0f, 1f);
+//        valueAnimator2.setDuration(2000);
+//        valueAnimator2.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+//            @Override
+//            public void onAnimationUpdate(ValueAnimator animation) {
+//                imageView.setAlpha((Float) animation.getAnimatedValue());
+//                if((Float) animation.getAnimatedValue() == 1f){
+//                    victoryView.setVisibility(View.VISIBLE);
+//                    findViewById(R.id.guide).setVisibility(View.GONE);
+//                    findViewById(R.id.question).setVisibility(View.GONE);
+//                    findViewById(R.id.suggestions).setVisibility(View.GONE);
+//                }
+//            }
+//        });
+//        AnimatorSet animatorSet = new AnimatorSet();
+//        animatorSet.play(valueAnimator).after(valueAnimator2);
+//        animatorSet.start();
     }
 
     public void hideVictory() {
@@ -230,30 +353,67 @@ public class PuzzleActivity extends AppCompatActivity {
         nextQuestion();
     }
 
+    @Override
+    protected void onPause() {
+        super.onPause();
+        currentQuestion = 0;
+        rightAnswers = 0;
+        suggestions.clear();
+    }
+
     private void nextQuestion() {
         currentQuestion++;
+        rightAnswers = 0;
         if(currentQuestion == questions.size()){
             Intent intent = new Intent(PuzzleActivity.this, GameActivity.class);
             intent.putExtra("image", GameActivity.imageID);
             startActivity(intent);
             currentQuestion = 0;
+            difficulty = 2;
             finish();
             return;
         }
-        createPuzzle(2);
+        if(currentQuestion < questions.size()/2){
+            createPuzzle(2);
+        }else{
+            createPuzzle(3);
+            GridView gridView = (GridView) findViewById(R.id.suggestions);
+            gridView.setNumColumns(5);
+            TextView textView = (TextView) findViewById(R.id.question_text);
+            textView.setText("Choisissez les parties manquantes");
+        }
         findViewById(R.id.question).setVisibility(View.VISIBLE);
         findViewById(R.id.suggestions).setVisibility(View.VISIBLE);
     }
 
-    private void help() {
-        Random random = new Random();
-        Bitmap rightAnswer = suggestions.get(missingPiece);
-        int removedItem = random.nextInt(suggestions.size());
-        while (removedItem == missingPiece){
-            removedItem = random.nextInt(suggestions.size());
+    private void help(int selectedPosition) {
+//        List<Bitmap> rightAnswers = new ArrayList<>();
+//        rightAnswers.add(suggestions.get(missingPiece[0]));
+//        if(difficulty == 3){
+//            rightAnswers.add(suggestions.get(missingPiece[1]));
+//        }
+//        int removedItem = random.nextInt(suggestions.size());
+//        if(difficulty == 3){
+//            while (removedItem == missingPiece[0] || removedItem == missingPiece[1]){
+//                removedItem = random.nextInt(suggestions.size());
+//            }
+//        }else{
+//            while (removedItem == missingPiece[0]){
+//                removedItem = random.nextInt(suggestions.size());
+//            }
+//        }
+        Bitmap bitmap = suggestions.get(missingPiece[0]);
+        Bitmap bitmap1 = null;
+        if(difficulty == 3){
+            bitmap1 = suggestions.get(missingPiece[1]);
         }
-        suggestions.remove(removedItem);
-        missingPiece = suggestions.indexOf(rightAnswer);
+        suggestions.remove(selectedPosition);
+        missingPiece[0] = suggestions.indexOf(bitmap);
+        indexImagePair.put(missingPieceImage[0], missingPiece[0]);
+        if (difficulty == 3){
+            missingPiece[1] = suggestions.indexOf(bitmap1);
+            indexImagePair.put(missingPieceImage[1], missingPiece[1]);
+        }
         GridView gridView = (GridView) findViewById(R.id.suggestions);
         ArrayAdapter arrayAdapter = new CustomAdapter();
         gridView.setAdapter(arrayAdapter);
@@ -296,27 +456,54 @@ public class PuzzleActivity extends AppCompatActivity {
 
     private void createPuzzle(int division) {
         suggestions.clear();
+        difficulty = division;
         ImageView imageView = (ImageView) findViewById(R.id.image);
         Bitmap bitmapSource = BitmapFactory.decodeResource(getResources(), questions.get(currentQuestion));
         Bitmap bitmap = Bitmap.createBitmap(bitmapSource.getWidth(), bitmapSource.getHeight(), Bitmap.Config.ARGB_8888);
         Canvas canvas = new Canvas(bitmap);
         Random random = new Random();
-        missingPiece = random.nextInt((int) Math.pow(division, 2));
+        missingPiece[0] = random.nextInt((int) Math.pow(division, 2));
+        if(division == 3){
+            missingPiece[1] = random.nextInt((int) Math.pow(division, 2));
+            while (missingPiece[0] == missingPiece[1]){
+                missingPiece[1] = random.nextInt((int) Math.pow(division, 2));
+            }
+            missingPieceImage[1] = missingPiece[1];
+        }
+        missingPieceImage[0] = missingPiece[0];
+
         int count = 0;
         for(int i = 0; i < division; i++){
             for (int j = 0; j < division; j++){
                 Bitmap piece = Bitmap.createBitmap(bitmapSource, (j * bitmapSource.getWidth())/division, (i * bitmapSource.getHeight())/division, bitmapSource.getWidth()/division, bitmapSource.getHeight()/division);
                 suggestions.add(piece);
-                if(missingPiece != count){
-                    canvas.drawBitmap(piece, (j * bitmapSource.getWidth())/division, (i * bitmapSource.getHeight())/division, null);
+                switch (division){
+                    case 2:
+                        if(missingPiece[0] != count){
+                            canvas.drawBitmap(piece, (j * bitmapSource.getWidth())/division, (i * bitmapSource.getHeight())/division, null);
+                        }
+                        break;
+                    case 3:
+                        if(missingPiece[0] != count && missingPiece[1] != count){
+                            canvas.drawBitmap(piece, (j * bitmapSource.getWidth())/division, (i * bitmapSource.getHeight())/division, null);
+                        }
                 }
                 count++;
             }
         }
         imageView.setImageBitmap(bitmap);
-        Bitmap rightBitmap = suggestions.get(missingPiece);
+        List<Bitmap> rightBitmaps = new ArrayList<>();
+        rightBitmaps.add(suggestions.get(missingPiece[0]));
+        if (division == 3){
+            rightBitmaps.add(suggestions.get(missingPiece[1]));
+        }
         Collections.shuffle(suggestions);
-        missingPiece = suggestions.indexOf(rightBitmap);
+        missingPiece[0] = suggestions.indexOf(rightBitmaps.get(0));
+        if (division == 3){
+            missingPiece[1] = suggestions.indexOf(rightBitmaps.get(1));
+            indexImagePair.put(missingPieceImage[1], missingPiece[1]);
+        }
+        indexImagePair.put(missingPieceImage[0], missingPiece[0]);
     }
 
     public class CustomAdapter extends ArrayAdapter {

@@ -42,14 +42,14 @@
             android:layout_weight="5"
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:text="Moi"
+            android:text="Questions pour Moi"
             android:textAlignment="center"
             android:textSize="35sp"/>
         <TextView
             android:layout_weight="5"
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:text="Ma Famille"
+            android:text="Puzzle Ma Famille"
             android:textAlignment="center"
             android:textSize="35sp"/>
         </TableRow>

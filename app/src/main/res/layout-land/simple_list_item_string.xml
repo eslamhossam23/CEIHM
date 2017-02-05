@@ -3,17 +3,19 @@
     android:layout_width="match_parent" android:layout_height="match_parent">
 
     <TextView
-        android:layout_width="wrap_content"
+        android:layout_width="500dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="19dp"
         android:id="@+id/textView2"
         android:textSize="25sp"
         android:textStyle="normal|bold"
         android:textAlignment="center"
         android:text="Text"
-        android:padding="10dp"
-        android:minWidth="200dp"
+        android:paddingTop="20dp"
+        android:paddingBottom="20dp"
+        android:paddingLeft="30dp"
+        android:paddingRight="30dp"
         android:background="@drawable/back"
         android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true" />
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="3dp"/>
 </RelativeLayout>

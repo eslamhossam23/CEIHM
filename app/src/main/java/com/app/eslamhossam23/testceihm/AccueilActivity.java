@@ -3,6 +3,7 @@ package com.app.eslamhossam23.testceihm;
 import android.animation.AnimatorSet;
 import android.animation.ValueAnimator;
 import android.content.Intent;
+import android.graphics.Color;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -24,9 +25,9 @@ import java.util.TimerTask;
 public class AccueilActivity extends AppCompatActivity {
     public static final int PERIOD = 20000;
     public static final String PREFERENCE = "Preference";
-    public static final String SEASON = "Nous sommes dans quel saison?";
-    public static final String MONTH = "Nous sommes dans quel mois?";
-    public static final String DAY = "Nous sommes dans quel jour?";
+    public static final String SEASON = "Nous sommes dans quel saison? 1/3";
+    public static final String MONTH = "Nous sommes dans quel mois? 2/3";
+    public static final String DAY = "Nous sommes dans quel jour? 3/3";
     public static final String BIRTHDAY = "Quelle est votre anniversaire?";
     public static final String FILM = "Quelle est votre film préféré?";
     public static final String MUSIC = "Quelle est votre musique préférée?";
@@ -45,42 +46,42 @@ public class AccueilActivity extends AppCompatActivity {
         initQuestions();
         initReponses();
         initQuestion();
-        timer = new Timer();
-        timer.schedule(new TimerTask() {
-            @Override
-            public void run() {
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-//                        final ImageView cursor = (ImageView) findViewById(R.id.cursor);
-                        showHint(HINT_TEXT);
-                    }
-                });
-            }
-        }, 0, PERIOD);
+//        timer = new Timer();
+//        timer.schedule(new TimerTask() {
+//            @Override
+//            public void run() {
+//                runOnUiThread(new Runnable() {
+//                    @Override
+//                    public void run() {
+////                        final ImageView cursor = (ImageView) findViewById(R.id.cursor);
+//                        showHint(HINT_TEXT);
+//                    }
+//                });
+//            }
+//        }, 0, PERIOD);
     }
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
-        pauseTimer();
-        startTimer();
+//        pauseTimer();
+//        startTimer();
         return super.onTouchEvent(event);
     }
 
     private void startTimer() {
-        timer = new Timer();
-        timer.schedule(new TimerTask() {
-            @Override
-            public void run() {
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-//                        final ImageView cursor = (ImageView) findViewById(R.id.cursor);
-                        showHint(HINT_TEXT);
-                    }
-                });
-            }
-        }, INACTIVITY_DELAY, PERIOD);
+//        timer = new Timer();
+//        timer.schedule(new TimerTask() {
+//            @Override
+//            public void run() {
+//                runOnUiThread(new Runnable() {
+//                    @Override
+//                    public void run() {
+////                        final ImageView cursor = (ImageView) findViewById(R.id.cursor);
+//                        showHint(HINT_TEXT);
+//                    }
+//                });
+//            }
+//        }, INACTIVITY_DELAY, PERIOD);
     }
 
     private void pauseTimer() {
@@ -88,28 +89,30 @@ public class AccueilActivity extends AppCompatActivity {
     }
 
     public void initQuestions() {
+        questions.clear();
         questions.add(SEASON);
         questions.add(MONTH);
         questions.add(DAY);
-        questions.add(BIRTHDAY);
+//        questions.add(BIRTHDAY);
 //        questions.add(FILM);
 //        questions.add(MUSIC);
     }
 
     public void initReponses() {
-        reponses.add("Winter");
+        reponses.clear();
+        reponses.add("Hiver");
         reponses.add("Janvier");
         reponses.add("Lundi");
-        reponses.add("19/3/1980");
+//        reponses.add("19/3/1980");
 //        reponses.add(PREFERENCE);
 //        reponses.add(PREFERENCE);
     }
 
     public void initQuestion() {
-        themes.add(new Theme(R.drawable.winter, "Winter"));
-        themes.add(new Theme(R.drawable.autumn_small, "Autumn"));
-        themes.add(new Theme(R.drawable.spring, "Spring"));
-        themes.add(new Theme(R.drawable.summer, "Summer"));
+        themes.add(new Theme(R.drawable.winter, "Hiver"));
+        themes.add(new Theme(R.drawable.autumn_small, "Automne"));
+        themes.add(new Theme(R.drawable.spring, "Printemps"));
+        themes.add(new Theme(R.drawable.summer, "Été"));
         GridView gridView = (GridView) findViewById(R.id.grid);
         ArrayAdapter arrayAdapter = new AccueilActivity.ListAdapter(themes);
         gridView.setAdapter(arrayAdapter);
@@ -128,7 +131,7 @@ public class AccueilActivity extends AppCompatActivity {
             @Override
             public void onAnimationUpdate(ValueAnimator animation) {
                 guideView.setAlpha((Float) animation.getAnimatedValue());
-                if((Float) animation.getAnimatedValue() == 0f){
+                if((Float) animation.getAnimatedValue() == 1f){
                     hideHint();
                 }
             }
@@ -151,7 +154,7 @@ public class AccueilActivity extends AppCompatActivity {
 //        animatorSet.play(valueAnimator).before(valueAnimator2);
 //        animatorSet.start();
         valueAnimator.start();
-        findViewById(R.id.question).setVisibility(View.INVISIBLE);
+        findViewById(R.id.question).setVisibility(View.GONE);
         TextView hintTextView = (TextView) guideView.findViewById(R.id.hint);
         hintTextView.setText(hint);
     }
@@ -169,7 +172,7 @@ public class AccueilActivity extends AppCompatActivity {
 //                    ImageView cursor = (ImageView) findViewById(R.id.cursor);
 //                    cursor.setImageResource(R.drawable.cursor);
 //                    cursor.setX(oldCursorLocationX);
-                    guideView.setVisibility(View.INVISIBLE);
+                    guideView.setVisibility(View.GONE);
                     findViewById(R.id.question).setVisibility(View.VISIBLE);
 
                 }
@@ -195,9 +198,9 @@ public class AccueilActivity extends AppCompatActivity {
             }
         });
         valueAnimator.start();
-        timer.cancel();
-        findViewById(R.id.guide).setVisibility(View.INVISIBLE);
-        findViewById(R.id.question).setVisibility(View.INVISIBLE);
+//        timer.cancel();
+        findViewById(R.id.guide).setVisibility(View.GONE);
+        findViewById(R.id.question).setVisibility(View.GONE);
     }
 
     public void hideVictory() {
@@ -223,10 +226,16 @@ public class AccueilActivity extends AppCompatActivity {
         question = 0;
     }
 
+    @Override
+    protected void onPause() {
+        super.onPause();
+        question = 0;
+    }
+
     public void nextQuestion() {
         question++;
         if(questions.size() == question){
-            findViewById(R.id.question).setVisibility(View.INVISIBLE);
+            findViewById(R.id.question).setVisibility(View.GONE);
             question = 0;
             Timer timer = new Timer();
             timer.schedule(new TimerTask() {
@@ -268,46 +277,41 @@ public class AccueilActivity extends AppCompatActivity {
                 gridView.setAdapter(arrayAdapter);
                 break;
             case DAY: List<String> days = new ArrayList<>();
-                days.add("Samedi");
-                days.add("Dimanche");
                 days.add("Lundi");
                 days.add("Mardi");
                 days.add("Mercredi");
                 days.add("Jeudi");
                 days.add("Vendredi");
+                days.add("Samedi");
+                days.add("Dimanche");
                 arrayAdapter = new AccueilActivity.StringListAdapter(days);
                 gridView.setAdapter(arrayAdapter);
                 break;
-            case BIRTHDAY: List<String> anniversaries = new ArrayList<>();
-                anniversaries.add("29/10/1890");
-                anniversaries.add("5/4/1970");
-                anniversaries.add("15/3/1960");
-                anniversaries.add("19/3/1980");
-                arrayAdapter = new AccueilActivity.StringListAdapter(anniversaries);
-                gridView.setAdapter(arrayAdapter);
-                break;
+//            case BIRTHDAY: List<String> anniversaries = new ArrayList<>();
+//                anniversaries.add("29/10/1890");
+//                anniversaries.add("5/4/1970");
+//                anniversaries.add("15/3/1960");
+//                anniversaries.add("19/3/1980");
+//                arrayAdapter = new AccueilActivity.StringListAdapter(anniversaries);
+//                gridView.setAdapter(arrayAdapter);
+//                break;
         }
-        timer = new Timer();
-        timer.schedule(new TimerTask() {
-            @Override
-            public void run() {
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-//                        final ImageView cursor = (ImageView) findViewById(R.id.cursor);
-                        showHint(HINT_TEXT);
-                    }
-                });
-            }
-        }, INACTIVITY_DELAY, PERIOD);
+//        timer = new Timer();
+//        timer.schedule(new TimerTask() {
+//            @Override
+//            public void run() {
+//                runOnUiThread(new Runnable() {
+//                    @Override
+//                    public void run() {
+////                        final ImageView cursor = (ImageView) findViewById(R.id.cursor);
+//                        showHint(HINT_TEXT);
+//                    }
+//                });
+//            }
+//        }, INACTIVITY_DELAY, PERIOD);
     }
 
-    public void help(List<String> reponses, int reponseJuste){
-        Random random = new Random();
-        int removedItem = random.nextInt(reponses.size());
-        while (removedItem == reponseJuste){
-            removedItem = random.nextInt(reponses.size());
-        }
+    public void help(List<String> reponses, int removedItem){
         reponses.remove(removedItem);
         GridView gridView = (GridView) findViewById(R.id.grid);
         ArrayAdapter arrayAdapter = new AccueilActivity.StringListAdapter(reponses);
@@ -315,12 +319,7 @@ public class AccueilActivity extends AppCompatActivity {
         showSecondChance();
     }
 
-    public void helpTheme(List<Theme> reponses, int reponseJuste){
-        Random random = new Random();
-        int removedItem = random.nextInt(reponses.size());
-        while (removedItem == reponseJuste){
-            removedItem = random.nextInt(reponses.size());
-        }
+    public void helpTheme(List<Theme> reponses, int removedItem){
         reponses.remove(removedItem);
         GridView gridView = (GridView) findViewById(R.id.grid);
         ArrayAdapter arrayAdapter = new AccueilActivity.ListAdapter(reponses);
@@ -331,7 +330,7 @@ public class AccueilActivity extends AppCompatActivity {
     private void showSecondChance() {
         final View tryAgain = findViewById(R.id.secondChance);
         final View questions = findViewById(R.id.question);
-        questions.setVisibility(View.INVISIBLE);
+        questions.setVisibility(View.GONE);
         tryAgain.setAlpha(0);
         tryAgain.setVisibility(View.VISIBLE);
         ValueAnimator valueAnimator = ValueAnimator.ofFloat(0f, 1f);
@@ -369,7 +368,7 @@ public class AccueilActivity extends AppCompatActivity {
 
         @NonNull
         @Override
-        public View getView(int position, View convertView, @NonNull ViewGroup parent) {
+        public View getView(final int position, View convertView, @NonNull ViewGroup parent) {
             View itemView = convertView;
             if (itemView == null) {
                 itemView = getLayoutInflater().inflate(R.layout.simple_list_item_2, parent, false);
@@ -378,6 +377,8 @@ public class AccueilActivity extends AppCompatActivity {
             ImageView imageView = (ImageView) itemView.findViewById(R.id.imageView2);
             imageView.setImageResource(theme.getIdImage());
             imageView.setTag(theme.getName());
+            TextView textView = (TextView) itemView.findViewById(R.id.textView2);
+            textView.setText(theme.getName());
             itemView.setOnClickListener(new View.OnClickListener() {
                 //                String nom = theme.getName();
                 @Override
@@ -392,11 +393,12 @@ public class AccueilActivity extends AppCompatActivity {
 //                    });
 //                    valueAnimator.start();
 //                    Toast.makeText(getContext(), "Vous avez selectionné " + nom, Toast.LENGTH_SHORT).show();
+                    onTouchEvent(MotionEvent.obtain(0,0,0,0,0,0));
                     if (!reponses.get(question).equals(PREFERENCE)) {
                         if (v.findViewById(R.id.imageView2).getTag().equals(reponses.get(question))) {
                             showVictory();
                         }else {
-                            helpTheme(themes, 0);
+                            helpTheme(themes, position);
                         }
                     }
                 }
@@ -417,7 +419,7 @@ public class AccueilActivity extends AppCompatActivity {
 
         @NonNull
         @Override
-        public View getView(int position, View convertView, @NonNull ViewGroup parent) {
+        public View getView(final int position, View convertView, @NonNull ViewGroup parent) {
             View itemView = convertView;
             if (itemView == null) {
                 itemView = getLayoutInflater().inflate(R.layout.simple_list_item_string, parent, false);
@@ -426,6 +428,8 @@ public class AccueilActivity extends AppCompatActivity {
             TextView textView = (TextView) itemView.findViewById(R.id.textView2);
             textView.setText(reponse);
             textView.setTag(reponse);
+            textView.setTextColor(Color.WHITE);
+            itemView.setBackgroundColor(Color.parseColor("#4286f4"));
             textView.setOnClickListener(new View.OnClickListener() {
                 //                String nom = theme.getName();
                 @Override
@@ -440,11 +444,12 @@ public class AccueilActivity extends AppCompatActivity {
 //                    });
 //                    valueAnimator.start();
 //                    Toast.makeText(getContext(), "Vous avez selectionné " + nom, Toast.LENGTH_SHORT).show();
+                    onTouchEvent(MotionEvent.obtain(0,0,0,0,0,0));
                     if (!reponses.get(question).equals(PREFERENCE)) {
                         if (v.findViewById(R.id.textView2).getTag().equals(reponses.get(question))) {
                             showVictory();
                         }else {
-                            help(reponsesAvecErreurs, reponsesAvecErreurs.indexOf(reponses.get(question)));
+                            help(reponsesAvecErreurs, position);
                         }
                     }
                 }

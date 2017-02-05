@@ -66,20 +66,20 @@ public class GameActivity extends AppCompatActivity {
 //        GridView gridView = (GridView) findViewById(R.id.listCategories);
 //        ArrayAdapter arrayAdapter = new ListAdapter();
 //        gridView.setAdapter(arrayAdapter);
-        timer = new Timer();
-        timer.schedule(new TimerTask() {
-            @Override
-            public void run() {
-//                        final ImageView cursor = (ImageView) findViewById(R.id.cursor);
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        showHint(HINT_TEXT);
-                    }
-                });
-
-            }
-        }, 0, PERIOD);
+//        timer = new Timer();
+//        timer.schedule(new TimerTask() {
+//            @Override
+//            public void run() {
+////                        final ImageView cursor = (ImageView) findViewById(R.id.cursor);
+//                runOnUiThread(new Runnable() {
+//                    @Override
+//                    public void run() {
+//                        showHint(HINT_TEXT);
+//                    }
+//                });
+//
+//            }
+//        }, 0, PERIOD);
 
 
     }
@@ -169,8 +169,8 @@ public class GameActivity extends AppCompatActivity {
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
-        pauseTimer();
-        startTimer();
+//        pauseTimer();
+//        startTimer();
         return super.onTouchEvent(event);
     }
 
